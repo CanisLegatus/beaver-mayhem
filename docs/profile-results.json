@@ -1,0 +1,10 @@
+{
+  "average_draw_calls": 417.443333333332,
+  "max_frame_ms": 27.028,
+  "mean_frame_ms": 16.66679,
+  "note": "Graphical fixture with 12 initial enemies, fan and gate; HP raised to avoid ending profiling. Not Android or a human run.",
+  "p95_frame_ms": 17.414,
+  "platform": "Linux x86_64 AMD Lucienne Mesa 26.2.6, Compatibility",
+  "samples": 600,
+  "viewport": "432x864"
+}

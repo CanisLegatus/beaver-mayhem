@@ -64,6 +64,9 @@ func _ready() -> void:
 	projectiles.rocket_ignited.connect(func(pos: Vector3) -> void:
 		effects.burst(pos, Art.GOLD, 10)
 		audio.play("rocket"))
+	projectiles.rocket_exploded.connect(func(pos: Vector3) -> void:
+		effects.burst(pos, Color("ff884f"), 14)
+		audio.play("explosion"))
 	enemies.attack.connect(func(kind: int, pos: Vector3, velocity: Vector2, damage: float) -> void:
 		projectiles.spawn(["axe", "paper", "rocket"][kind], pos, velocity, damage, false)
 		audio.play(["shoot", "paper", "rocket"][kind]))
@@ -147,6 +150,7 @@ func _physics_process(delta: float) -> void:
 		hud.notify("FINAL THREAT: DEFORESTATOR")
 		audio.play("alarm")
 	projectiles.tick(delta, player.x)
+	projectiles.rocket_trails(effects, delta)
 	if state != "playing": return
 	enemies.tick(delta, seconds, player.x, gates.near_player())
 	if state != "playing": return

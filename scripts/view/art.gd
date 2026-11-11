@@ -2,6 +2,7 @@ class_name Art
 extends RefCounted
 ## All original procedural models. Shared materials keep state changes bounded.
 static var materials: Dictionary = {}
+static var meshes: Dictionary = {}
 const BROWN = Color("81502f")
 const TAN = Color("dba56c")
 const DARK = Color("203b3c")
@@ -29,27 +30,39 @@ static func shape(parent: Node3D, mesh: Mesh, pos: Vector3, color: Color) -> Mes
 	return node
 
 static func box(parent: Node3D, pos: Vector3, size: Vector3, color: Color) -> MeshInstance3D:
-	var mesh := BoxMesh.new()
-	mesh.size = size
-	return shape(parent, mesh, pos, color)
+	if not meshes.has("box"):
+		var mesh := BoxMesh.new()
+		mesh.size = Vector3.ONE
+		meshes.box = mesh
+	var node := shape(parent, meshes.box, pos, color)
+	node.scale = size
+	return node
 
 static func ball(parent: Node3D, pos: Vector3, size: Vector3, color: Color) -> MeshInstance3D:
-	var mesh := SphereMesh.new()
-	mesh.radial_segments = 10
-	mesh.rings = 5
-	mesh.radius = 0.5
-	mesh.height = 1.0
-	var node := shape(parent, mesh, pos, color)
+	if not meshes.has("ball"):
+		var mesh := SphereMesh.new()
+		mesh.radial_segments = 10
+		mesh.rings = 5
+		mesh.radius = 0.5
+		mesh.height = 1.0
+		meshes.ball = mesh
+	var node := shape(parent, meshes.ball, pos, color)
 	node.scale = size
 	return node
 
 static func cylinder(parent: Node3D, pos: Vector3, radius: float, height: float, color: Color, top: float = -1.0) -> MeshInstance3D:
-	var mesh := CylinderMesh.new()
-	mesh.top_radius = radius if top < 0 else top
-	mesh.bottom_radius = radius
-	mesh.height = height
-	mesh.radial_segments = 8
-	return shape(parent, mesh, pos, color)
+	var ratio := 1.0 if top < 0 else top / radius
+	var key := "cylinder" + str(ratio)
+	if not meshes.has(key):
+		var mesh := CylinderMesh.new()
+		mesh.top_radius = ratio
+		mesh.bottom_radius = 1.0
+		mesh.height = 1.0
+		mesh.radial_segments = 8
+		meshes[key] = mesh
+	var node := shape(parent, meshes[key], pos, color)
+	node.scale = Vector3(radius, height, radius)
+	return node
 
 static func label(parent: Node3D, text: String, pos: Vector3, size: int, color: Color = Color.WHITE) -> Label3D:
 	var node := Label3D.new()

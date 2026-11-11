@@ -41,6 +41,7 @@ func _ready() -> void:
 		for lane in [-3, -1, 1, 3]:
 			for j in range(8):
 				Art.box(chunk, Vector3(lane, 0.01, -j * 4.0), Vector3(0.065, 0.02, 1.2), Color("e8d5a1"))
+		batch_static_chunk(chunk)
 	for side in [-1, 1]:
 		for i in range(4):
 			Art.ball(self, Vector3(side * (20 + i * 10), 1, -70 - i * 14), Vector3(23, 13 + i * 4, 32), Color("5a9c81"))
@@ -50,3 +51,22 @@ func scroll(delta: float) -> void:
 		chunk.position.z += float(Rules.config.run_speed) * delta
 		if chunk.position.z > 48:
 			chunk.position.z -= CHUNK_SIZE * chunks.size()
+
+func batch_static_chunk(chunk: Node3D) -> void:
+	var groups: Dictionary = {}
+	for child in chunk.get_children():
+		if child is MeshInstance3D:
+			var key := str(child.mesh.get_instance_id()) + "/" + str(child.material_override.get_instance_id())
+			if not groups.has(key): groups[key] = []
+			groups[key].append(child)
+	for group in groups.values():
+		var batch := MultiMeshInstance3D.new()
+		var multi := MultiMesh.new()
+		multi.transform_format = MultiMesh.TRANSFORM_3D
+		multi.mesh = group[0].mesh
+		multi.instance_count = group.size()
+		for i in range(group.size()): multi.set_instance_transform(i, group[i].transform)
+		batch.multimesh = multi
+		batch.material_override = group[0].material_override
+		chunk.add_child(batch)
+		for child in group: child.free()

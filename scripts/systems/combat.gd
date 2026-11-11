@@ -17,9 +17,12 @@ func tick(delta: float, x: float, economy: Economy, projectiles: ProjectileSyste
 		heat = maxf(0, heat - delta * 0.5)
 	if overheated and heat <= 0: overheated = false
 	cooldown -= delta
-	if cooldown > 0 or (economy.active == "laser" and overheated): return false
+	if economy.active == "laser" and overheated:
+		cooldown = maxf(0.0, cooldown)
+		return false
+	if cooldown > 0: return false
 	var stats := Rules.weapon_stats(economy.active, economy.damage_level, economy.rate_level)
-	cooldown = stats.interval
+	cooldown += float(stats.interval)
 	for i in range(int(stats.count)):
 		var angle := (i - 1) * 0.12 if economy.active == "fan" else 0.0
 		var offset := (i - 0.5) * 1.0 if economy.active == "twin" else 0.0

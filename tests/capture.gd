@@ -15,6 +15,7 @@ func run() -> void:
 	game.enemies.spawn(2,-2,-32)
 	game.enemies.spawn(0,0,-36)
 	game.enemies.spawn(0,4,-39)
+	game.gates.schedule_index = 3
 	game.gates.spawn(40)
 	game.gates.groups[0].z = -20
 	game.gates.tick(0,40,0)
@@ -36,11 +37,16 @@ func run() -> void:
 	game.enemies.tick(0,95,0)
 	game.hud.refresh(game.health,game.economy,game.seconds,game.enemies.boss,game.combat)
 	await capture("boss")
-	game.win()
+	for i in range(50):
+		game.projectiles.spawn("log",Vector3(0,1,-19),Vector2(0,-38),12,true)
+		game.projectiles.tick(0.1,0)
+	game.enemies.tick(0,95,0)
 	await capture("victory")
 	game.queue_free()
 	await process_frame
 	Art.materials.clear()
+	Art.meshes.clear()
+	await create_timer(0.15).timeout
 	quit()
 func capture(label: String) -> void:
 	for i in range(3): await process_frame

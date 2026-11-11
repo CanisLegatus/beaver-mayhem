@@ -20,6 +20,8 @@ func tick(delta: float, keyboard: float = 0.0) -> void:
 	distance += float(Rules.config.run_speed) * delta
 
 func input(event: InputEvent, viewport_size: Vector2) -> void:
+	# Touch emits synthetic mouse events for UI; do not apply its motion twice.
+	if event is InputEventMouse and event.device == InputEvent.DEVICE_ID_EMULATION: return
 	if event is InputEventScreenTouch:
 		if event.pressed and pointer_id == -1:
 			pointer_id = event.index

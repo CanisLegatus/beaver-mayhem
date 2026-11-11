@@ -3,6 +3,7 @@ extends Node3D
 signal player_hit(damage: float)
 signal impact(pos: Vector3, color: Color)
 signal rocket_ignited(pos: Vector3)
+signal rocket_exploded(pos: Vector3)
 var shots: Array[Dictionary] = []
 var targets: Array[Dictionary] = []
 
@@ -61,8 +62,18 @@ func tick(delta: float, player_x: float) -> void:
 			remove(shot)
 
 func remove(shot: Dictionary) -> void:
+	if shot.kind == "rocket" and shot.ignited:
+		rocket_exploded.emit(shot.visual.position)
 	shots.erase(shot)
 	shot.visual.queue_free()
 
 func clear() -> void:
 	for shot in shots.duplicate(): remove(shot)
+
+func rocket_trails(effects: Effects, delta: float) -> void:
+	for shot in shots:
+		if shot.kind == "rocket" and shot.ignited:
+			shot.trail_clock = shot.get("trail_clock", 0.0) + delta
+			if shot.trail_clock >= 0.08:
+				shot.trail_clock = 0.0
+				effects.burst(shot.visual.position, Art.GOLD, 1)

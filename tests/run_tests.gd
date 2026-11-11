@@ -16,6 +16,7 @@ func run() -> void:
 	test_economy()
 	await test_runtime()
 	Art.materials.clear()
+	Art.meshes.clear()
 	await process_frame
 	await process_frame
 	await create_timer(0.15).timeout
@@ -50,6 +51,28 @@ func test_rules() -> void:
 			check(Rules.gate_result(problem, good * 2.0) == problem.reward, "correct gate reward")
 			check(Rules.gate_result(problem, 4) == 0, "skip gate is neutral")
 			check(Rules.gate_result(problem, ((good + 2) % 3 - 1) * 2.0) < 0, "incorrect gate penalty")
+	var controller := PlayerController.new()
+	var touch := InputEventScreenTouch.new()
+	touch.index = 2
+	touch.pressed = true
+	controller.input(touch, Vector2(432,864))
+	var drag := InputEventScreenDrag.new()
+	drag.index = 2
+	drag.relative = Vector2(36,0)
+	controller.input(drag, Vector2(432,864))
+	check(is_equal_approx(controller.target_x, 1.0), "touch drag maps viewport distance")
+	drag.index = 3
+	controller.input(drag, Vector2(432,864))
+	check(is_equal_approx(controller.target_x, 1.0), "second finger cannot move player")
+	var mouse := InputEventMouseMotion.new()
+	mouse.device = InputEvent.DEVICE_ID_EMULATION
+	mouse.relative = Vector2(36,0)
+	controller.mouse_down = true
+	controller.input(mouse, Vector2(432,864))
+	check(is_equal_approx(controller.target_x, 1.0), "synthetic mouse does not double touch")
+	touch.pressed = false
+	controller.input(touch, Vector2(432,864))
+	check(controller.pointer_id == -1, "touch release clears ownership")
 	var velocity := Vector2(5,0)
 	check(Rules.rocket_velocity(velocity, Vector2(0,20), 0.2, 0.1) == velocity, "rocket side launch fixed")
 	var guided := Rules.rocket_velocity(velocity, Vector2(0,20), 0.8, 0.1)
@@ -200,5 +223,35 @@ func test_runtime() -> void:
 	game.toggle_pause()
 	game._physics_process(0.1)
 	check(game.seconds > 0 and game.player.distance > 0, "resume restores motion")
+	game.start_run()
+	for kind in range(3):
+		var attacker := game.enemies.spawn(kind, kind * 2 - 2, -15)
+		attacker.attack_timer = 0.1
+	game.enemies.tick(0.2,40,0)
+	check(game.projectiles.shots.size() == 3, "all three enemy classes attack")
+	check(game.projectiles.shots[2].velocity.y == 0, "rocket launches sideways")
+	game.projectiles.tick(0.5,0)
+	check(game.projectiles.shots[2].ignited, "rocket ignition phase occurs")
+	game.start_run()
+	for i in range(4): game.enemies.spawn(0,0,-4-i*3)
+	game.projectiles.spawn("heavy",Vector3(0,1,0),Vector2(0,-38),31,true,3)
+	game.projectiles.tick(0.5,0)
+	check(game.enemies.enemies[2].health.dead and not game.enemies.enemies[3].health.dead, "heavy piercing stops at three")
+	game.start_run()
+	game.economy.money = 500
+	game.purchase("damage")
+	game._physics_process(0.1)
+	check(game.state == "playing" and game.seconds > 0 and game.economy.damage_level == 1, "HUD purchases keep simulation running")
+	game.gates.spawn(0)
+	game.gates.groups[0].z = 8
+	game.gates.tick(0,0,0)
+	game.loot.drop(Vector2(0,6),7)
+	game.loot.tick(0,0)
+	check(game.gates.groups.is_empty() and game.loot.coins.is_empty(), "passed gates and coins expire")
+	for i in range(12):
+		game.start_run()
+		game._physics_process(0.1)
+		await process_frame
+		check(game.enemies.enemies.size() <= 1 and game.projectiles.shots.size() <= 1, "repeated restart stays bounded")
 	game.queue_free()
 	await process_frame
