@@ -13,11 +13,11 @@ func reset() -> void:
 	pointer_id = -1
 	mouse_down = false
 
-func tick(delta: float, keyboard: float = 0.0) -> void:
+func tick(delta: float, keyboard: float = 0.0, speed: float = -1.0) -> void:
 	if keyboard != 0.0:
-		target_x = clampf(target_x + keyboard * 6.0 * delta, -Rules.config.road_limit, Rules.config.road_limit)
+		target_x = clampf(target_x + keyboard * float(Rules.config.strafe_speed) * delta, -Rules.config.road_limit, Rules.config.road_limit)
 	x = Rules.move_x(x, target_x, delta)
-	distance += float(Rules.config.run_speed) * delta
+	distance += (float(Rules.config.run_speed) if speed < 0 else speed) * delta
 
 func input(event: InputEvent, viewport_size: Vector2) -> void:
 	# Touch emits synthetic mouse events for UI; do not apply its motion twice.

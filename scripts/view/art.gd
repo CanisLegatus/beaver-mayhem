@@ -41,8 +41,8 @@ static func box(parent: Node3D, pos: Vector3, size: Vector3, color: Color) -> Me
 static func ball(parent: Node3D, pos: Vector3, size: Vector3, color: Color) -> MeshInstance3D:
 	if not meshes.has("ball"):
 		var mesh := SphereMesh.new()
-		mesh.radial_segments = 10
-		mesh.rings = 5
+		mesh.radial_segments = 24
+		mesh.rings = 12
 		mesh.radius = 0.5
 		mesh.height = 1.0
 		meshes.ball = mesh
@@ -58,7 +58,7 @@ static func cylinder(parent: Node3D, pos: Vector3, radius: float, height: float,
 		mesh.top_radius = ratio
 		mesh.bottom_radius = 1.0
 		mesh.height = 1.0
-		mesh.radial_segments = 8
+		mesh.radial_segments = 16
 		meshes[key] = mesh
 	var node := shape(parent, meshes[key], pos, color)
 	node.scale = Vector3(radius, height, radius)
@@ -79,57 +79,10 @@ static func label(parent: Node3D, text: String, pos: Vector3, size: int, color: 
 	return node
 
 static func beaver() -> Node3D:
-	var root := Node3D.new()
-	ball(root, Vector3(0, 0.85, 0), Vector3(1.0, 1.25, 0.85), BROWN)
-	ball(root, Vector3(0, 1.55, -0.15), Vector3(1.08, 0.95, 0.85), BROWN)
-	ball(root, Vector3(0, 1.35, -0.57), Vector3(0.85, 0.45, 0.38), TAN)
-	ball(root, Vector3(0, 1.52, -0.75), Vector3(0.22, 0.17, 0.14), DARK)
-	for side in [-1, 1]:
-		ball(root, Vector3(side * 0.4, 1.98, -0.05), Vector3(0.28, 0.3, 0.22), BROWN)
-		ball(root, Vector3(side * 0.3, 1.68, -0.52), Vector3(0.23, 0.26, 0.16), Color.WHITE)
-		ball(root, Vector3(side * 0.3, 1.67, -0.61), Vector3(0.10, 0.15, 0.06), DARK)
-		box(root, Vector3(side * 0.1, 1.12, -0.7), Vector3(0.16, 0.3, 0.11), Color("fff2cc"))
-		var foot := ball(root, Vector3(side * 0.35, 0.2, -0.07), Vector3(0.4, 0.32, 0.6), DARK)
-		foot.name = "FootL" if side == -1 else "FootR"
-		ball(root, Vector3(side * 0.52, 0.95, -0.2), Vector3(0.32, 0.6, 0.34), BROWN)
-	var tail := ball(root, Vector3(0, 0.28, 0.82), Vector3(0.75, 0.18, 1.3), Color("573e35"))
-	tail.rotation.x = -0.18
-	for i in range(5):
-		box(root, Vector3(0, 0.38, 0.42 + i * 0.19), Vector3(0.6, 0.025, 0.025), BROWN)
-	var launcher := cylinder(root, Vector3(0.58, 0.95, -0.6), 0.19, 0.8, DARK)
-	launcher.rotation.x = PI / 2
-	cylinder(root, Vector3(0.58, 1.3, -0.5), 0.11, 0.08, GOLD)
-	return root
+	return Characters.beaver()
 
 static func enemy(kind: int) -> Node3D:
-	var root := Node3D.new()
-	var shirt := [Color("da654a"), Color("558fa5"), Color("4d5675")][kind] as Color
-	ball(root, Vector3(0, 0.95, 0), Vector3(0.85, 1.15, 0.6), shirt)
-	ball(root, Vector3(0, 1.75, 0), Vector3(0.65, 0.7, 0.6), TAN)
-	for side in [-1, 1]:
-		var leg := box(root, Vector3(side * 0.22, 0.35, 0), Vector3(0.25, 0.65, 0.32), DARK)
-		leg.name = "FootL" if side == -1 else "FootR"
-		ball(root, Vector3(side * 0.48, 1.0, 0.15), Vector3(0.25, 0.7, 0.3), shirt)
-		ball(root, Vector3(side * 0.14, 1.8, 0.29), Vector3(0.09, 0.1, 0.05), DARK)
-	if kind < 2:
-		cylinder(root, Vector3(0, 2.06, 0), 0.39, 0.14, GOLD if kind == 0 else Color.WHITE)
-		ball(root, Vector3(0, 2.1, 0), Vector3(0.7, 0.4, 0.7), GOLD if kind == 0 else Color.WHITE)
-	else:
-		var hair := ball(root, Vector3(0, 2.07, -0.07), Vector3(0.7, 0.32, 0.65), Color("423637"))
-		hair.rotation.z = -0.18
-		box(root, Vector3(0, 1.2, 0.33), Vector3(0.09, 0.5, 0.04), Color.WHITE)
-		label(root, "X", Vector3(0.0, 1.3, 0.38), 24, Color.WHITE)
-	if kind == 0:
-		box(root, Vector3(0.68, 1.15, 0.13), Vector3(0.09, 1.1, 0.09), BROWN)
-		box(root, Vector3(0.8, 1.6, 0.13), Vector3(0.42, 0.3, 0.13), Color("b8d1cd"))
-	elif kind == 1:
-		box(root, Vector3(0.63, 1.2, 0.25), Vector3(0.65, 0.42, 0.13), Color("d2f3f5"))
-		for i in range(3):
-			box(root, Vector3(0.63, 1.1 + 0.09 * i, 0.33), Vector3(0.45, 0.025, 0.02), shirt)
-	else:
-		var tube := cylinder(root, Vector3(0.65, 1.35, 0), 0.22, 1.1, Color("929fa4"))
-		tube.rotation.z = PI / 2
-	return root
+	return Characters.human(kind)
 
 static func bulldozer() -> Node3D:
 	var root := Node3D.new()

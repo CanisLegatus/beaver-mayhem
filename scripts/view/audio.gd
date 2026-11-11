@@ -5,6 +5,8 @@ var sounds: Dictionary = {}
 var voices: Array[AudioStreamPlayer] = []
 var cursor := 0
 var muted := false
+var music: AudioStreamPlayer
+var last_play: Dictionary = {}
 
 func _ready() -> void:
 	var tones := {"shoot":[220.0,90.0,0.07], "hit":[120.0,50.0,0.09],
@@ -15,6 +17,15 @@ func _ready() -> void:
 	for key in tones:
 		var t: Array = tones[key]
 		sounds[key] = synth(t[0], t[1], t[2], key in ["explosion", "rocket", "hit"], key == "alarm")
+	for pair in [["shoot","throw.ogg"],["hit","wood-hit.ogg"],["paper","paper.ogg"],["buy","click.wav"],["explosion","explosion.ogg"],["coin","coins.ogg"],["dam","dam.ogg"]]:
+		sounds[pair[0]] = load("res://assets/audio/"+pair[1])
+	music = AudioStreamPlayer.new()
+	add_child(music)
+	var score: AudioStreamOggVorbis = load("res://assets/audio/prepare-to-fight.ogg")
+	score.loop = true
+	music.stream = score
+	music.volume_db = -16
+	if DisplayServer.get_name() != "headless": music.play()
 	for i in range(8):
 		var voice := AudioStreamPlayer.new()
 		add_child(voice)
@@ -43,6 +54,9 @@ func synth(start: float, finish: float, duration: float, noise: bool, alarm: boo
 
 func play(key: String) -> void:
 	if muted or not sounds.has(key) or voices.is_empty(): return
+	var now := Time.get_ticks_msec()
+	if now - int(last_play.get(key,-10000)) < (70 if key in ["hit","shoot"] else 30): return
+	last_play[key] = now
 	var voice := voices[cursor % voices.size()]
 	cursor += 1
 	voice.stream = sounds[key]
@@ -51,9 +65,18 @@ func play(key: String) -> void:
 func toggle() -> void:
 	muted = not muted
 	for voice in voices: voice.stream_paused = muted
+	if music != null: music.stream_paused = muted
 
 func _exit_tree() -> void:
+	if music != null:
+		music.stop()
+		music.stream = null
 	for voice in voices:
 		voice.stop()
 		voice.stream = null
 	sounds.clear()
+
+func set_mood(state: String) -> void:
+	if music == null: return
+	music.volume_db = -14 if state == "playing" else (-12 if state == "cinematic" else -22)
+	music.stream_paused = muted

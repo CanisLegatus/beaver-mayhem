@@ -15,10 +15,10 @@ static func upgrade_cost(kind: String, level: int) -> int:
 	return int(config[kind + "_costs"][level])
 
 static func threat_budget(seconds: float) -> float:
-	return 4.0 + minf(seconds / 90.0, 1.0) * 12.0
+	return 4.0 + minf(seconds / float(config.run_seconds), 1.0) * 12.0
 
 static func spawn_interval(seconds: float) -> float:
-	return lerpf(2.4, 1.35, clampf(seconds / 90.0, 0.0, 1.0))
+	return lerpf(2.4, 1.35, clampf(seconds / float(config.run_seconds), 0.0, 1.0))
 
 static func move_x(current: float, target: float, delta: float) -> float:
 	return move_toward(current, clampf(target, -config.road_limit, config.road_limit), config.strafe_speed * delta)
@@ -76,3 +76,14 @@ static func gate_result(problem: Dictionary, x: float) -> int:
 	if absi(lane) > 1 or absf(x - lane * float(config.lane_width)) > 0.8:
 		return 0
 	return int(problem.reward) if int(problem.choices[lane + 1]) == int(problem.answer) else -int(problem.penalty)
+
+static func run_speed(seconds: float) -> float:
+	return lerpf(float(config.run_speed), float(config.max_run_speed), clampf(seconds / float(config.run_seconds), 0.0, 1.0))
+
+static func travel_distance(seconds: float) -> float:
+	var duration := float(config.run_seconds)
+	var t := minf(seconds, duration)
+	return float(config.run_speed) * seconds + 0.5 * (float(config.max_run_speed) - float(config.run_speed)) * t * t / duration + maxf(0, seconds-duration) * (float(config.max_run_speed)-float(config.run_speed))
+
+static func preview_distance(seconds: float) -> float:
+	return travel_distance(seconds + float(config.gate_preview_seconds)) - travel_distance(seconds)

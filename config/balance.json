@@ -1,22 +1,130 @@
 {
- "run_seconds":90.0,"run_speed":8.0,"lane_width":2.0,"road_limit":4.6,"strafe_speed":6.0,
- "starting_money":40,"starting_hp":100,"debt_seconds":10.0,"max_upgrade":4,
- "damage_costs":[65,100,155,230],"rate_costs":[60,95,145,220],
- "weapon_prices":{"log":0,"fan":100,"heavy":130,"twin":155,"laser":190},
- "weapons":{
-  "log":{"damage":12.0,"interval":0.4,"count":1,"pierce":1,"speed":38.0},
-  "fan":{"damage":6.5,"interval":0.48,"count":3,"pierce":1,"speed":38.0},
-  "heavy":{"damage":31.0,"interval":0.85,"count":1,"pierce":3,"speed":32.0},
-  "twin":{"damage":7.5,"interval":0.42,"count":2,"pierce":1,"speed":40.0},
-  "laser":{"damage":6.0,"interval":0.1,"count":1,"pierce":1,"speed":180.0}
- },
- "enemies":[
-  {"name":"LUMBERJACK","hp":24.0,"damage":4.0,"attack":3.5,"reward":7,"penalty":12,"threat":1,"speed":2.0,"projectile_speed":14.0},
-  {"name":"ENGINEER","hp":55.0,"damage":10.0,"attack":1.8,"reward":16,"penalty":22,"threat":3,"speed":1.5,"projectile_speed":22.0},
-  {"name":"ELON","hp":120.0,"damage":24.0,"attack":5.0,"reward":45,"penalty":40,"threat":7,"speed":1.0,"projectile_speed":16.0}
- ],
- "boss_hp":600.0,"boss_speed":1.35,"boss_start_distance":38.0,
- "projectile_cap":160,"enemy_cap":22,"loot_cap":90,"vfx_cap":96,
- "rocket_ignite":0.45,"rocket_lock":1.65,"rocket_turn":2.0,"rocket_lifetime":6.0,
- "loot_radius":1.15,"gate_times":[10,23,37,51,65,79]
+  "run_seconds": 150.0,
+  "run_speed": 10.0,
+  "lane_width": 2.0,
+  "road_limit": 4.6,
+  "strafe_speed": 8.0,
+  "starting_money": 40,
+  "starting_hp": 100,
+  "debt_seconds": 10.0,
+  "max_upgrade": 4,
+  "damage_costs": [
+    65,
+    100,
+    155,
+    230
+  ],
+  "rate_costs": [
+    60,
+    95,
+    145,
+    220
+  ],
+  "weapon_prices": {
+    "log": 0,
+    "fan": 100,
+    "heavy": 130,
+    "twin": 155,
+    "laser": 190
+  },
+  "weapons": {
+    "log": {
+      "damage": 12.0,
+      "interval": 0.4,
+      "count": 1,
+      "pierce": 1,
+      "speed": 38.0
+    },
+    "fan": {
+      "damage": 6.5,
+      "interval": 0.48,
+      "count": 3,
+      "pierce": 1,
+      "speed": 38.0
+    },
+    "heavy": {
+      "damage": 31.0,
+      "interval": 0.85,
+      "count": 1,
+      "pierce": 3,
+      "speed": 32.0
+    },
+    "twin": {
+      "damage": 7.5,
+      "interval": 0.42,
+      "count": 2,
+      "pierce": 1,
+      "speed": 40.0
+    },
+    "laser": {
+      "damage": 6.0,
+      "interval": 0.1,
+      "count": 1,
+      "pierce": 1,
+      "speed": 180.0
+    }
+  },
+  "enemies": [
+    {
+      "name": "LUMBERJACK",
+      "hp": 24.0,
+      "damage": 4.0,
+      "attack": 3.5,
+      "reward": 10,
+      "penalty": 5,
+      "threat": 1,
+      "speed": 2.0,
+      "projectile_speed": 14.0
+    },
+    {
+      "name": "ENGINEER",
+      "hp": 55.0,
+      "damage": 10.0,
+      "attack": 1.8,
+      "reward": 25,
+      "penalty": 10,
+      "threat": 3,
+      "speed": 1.5,
+      "projectile_speed": 22.0
+    },
+    {
+      "name": "ELON",
+      "hp": 120.0,
+      "damage": 24.0,
+      "attack": 3.2,
+      "reward": 55,
+      "penalty": 18,
+      "threat": 7,
+      "speed": 1.0,
+      "projectile_speed": 16.0
+    }
+  ],
+  "boss_hp": 600.0,
+  "boss_speed": 1.35,
+  "boss_start_distance": 38.0,
+  "projectile_cap": 160,
+  "enemy_cap": 22,
+  "loot_cap": 90,
+  "vfx_cap": 96,
+  "rocket_ignite": 0.45,
+  "rocket_lock": 1.65,
+  "rocket_turn": 2.0,
+  "rocket_lifetime": 12.0,
+  "loot_radius": 1.15,
+  "gate_times": [
+    14,
+    31,
+    49,
+    67,
+    85,
+    103,
+    121,
+    139
+  ],
+  "max_run_speed": 15.0,
+  "enemy_spawn_distance": 115.0,
+  "gate_preview_seconds": 7.0,
+  "world_chunk_count": 7,
+  "cycle_seconds": 110.0,
+  "level_count": 10
 }

@@ -4,6 +4,9 @@ func run() -> void:
 	root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
 	root.content_scale_size = Vector2i(432,864)
 	var game: BeaverGame = load("res://scenes/main.tscn").instantiate()
+	game.progression = Progression.new("user://test-progress.cfg")
+	game.progression.unlocked = 1
+	game.progression.selected = 1
 	root.add_child(game)
 	await process_frame
 	game.start_run()
@@ -41,5 +44,6 @@ func run() -> void:
 	await process_frame
 	Art.materials.clear()
 	Art.meshes.clear()
+	Sculpt.clear_cache()
 	await create_timer(0.15).timeout
 	quit()

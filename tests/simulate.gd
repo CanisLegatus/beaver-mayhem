@@ -13,12 +13,16 @@ func run() -> void:
 	file.store_string(JSON.stringify(report,"  "))
 	Art.materials.clear()
 	Art.meshes.clear()
+	Sculpt.clear_cache()
 	await create_timer(0.15).timeout
 	print("SIMULATIONS: %d runs, runtime invariants %s" % [report.size(), "FAILED" if failed else "PASS"])
 	quit(1 if failed else 0)
 
 func simulate(strategy: String, seed_value: int) -> void:
 	var game: BeaverGame = load("res://scenes/main.tscn").instantiate()
+	game.progression = Progression.new("user://test-progress.cfg")
+	game.progression.unlocked = 1
+	game.progression.selected = 1
 	root.add_child(game)
 	await process_frame
 	game.set_physics_process(false)
@@ -38,7 +42,7 @@ func simulate(strategy: String, seed_value: int) -> void:
 	game.economy.confiscated.connect(func(_i: String) -> void: seized[0] += 1)
 	var purchases: Array[String] = []
 	var decision_timer := 0.0
-	for frame in range(60 * 122):
+	for frame in range(60 * int(float(Rules.config.run_seconds)+35)):
 		if game.state != "playing": break
 		decision_timer -= 1.0 / 60
 		if decision_timer <= 0:

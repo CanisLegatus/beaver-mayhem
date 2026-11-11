@@ -1,4 +1,13 @@
 # Changelog
+## 0.2.0 — 2026-11-12
+- Horizon spawns, seven-second gate preview and a 150-second run accelerating 10 → 15 m/s.
+- Faster steering, lower breach costs, higher rewards and early/frequent elite rockets.
+- Saved ten-chapter roadmap with locked previews and sequential victory unlocks.
+- Skippable first-chapter family/dam cinematic, tears, hero walk and full camera orbit.
+- Detailed sculpted 3D characters, day/night cycle, rivers, groves and rock scenery.
+- Generated photorealistic launcher icon, CC0 music/recordings and textured VFX.
+- Extended progression/story/speed tests, updated simulations and visual fixtures.
+
 ## 0.1.0 — 2026-11-11 
 - Complete 90-second 3D runner and approaching bulldozer finale.
 - Three attacking enemies, staged guided rockets, physical swept projectile hits.

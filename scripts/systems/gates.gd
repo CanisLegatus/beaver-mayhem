@@ -11,7 +11,7 @@ func spawn(seconds: float) -> Dictionary:
 	var problem := Rules.math_problem(seconds, rng)
 	var root := Node3D.new()
 	add_child(root)
-	root.position.z = -48.0
+	root.position.z = -Rules.preview_distance(seconds)
 	Art.label(root, problem.expression, Vector3(0, 4.2, 0), 68, Art.GOLD)
 	for lane in range(-1, 2):
 		var x := lane * 2.0
@@ -20,7 +20,7 @@ func spawn(seconds: float) -> Dictionary:
 		Art.box(root, Vector3(x, 2.55, 0), Vector3(1.7, 0.12, 0.15), Art.MINT)
 		Art.label(root, str(problem.choices[lane + 1]), Vector3(x, 2.0, 0), 58, Color.WHITE)
 		Art.box(root, Vector3(x, 0.035, 0), Vector3(1.5, 0.04, 1.3), Color("4c9b84"))
-	var group := {"visual": root, "z": -48.0, "problem": problem, "used": false}
+	var group := {"visual": root, "z": -Rules.preview_distance(seconds), "problem": problem, "used": false}
 	groups.append(group)
 	return group
 
@@ -29,7 +29,7 @@ func tick(delta: float, seconds: float, player_x: float) -> void:
 		spawn(seconds)
 		schedule_index += 1
 	for group in groups.duplicate():
-		group.z += float(Rules.config.run_speed) * delta
+		group.z += Rules.run_speed(seconds) * delta
 		group.visual.position.z = group.z
 		if group.z >= 0 and not group.used:
 			group.used = true

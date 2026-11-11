@@ -1,70 +1,67 @@
 #!/usr/bin/env python3
-"""Generate documented analytic metrics from the runtime configuration and results."""
+"""Generate analytic metrics and bot outcomes from actual runtime data."""
 import json
 from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 c = json.loads((root/'config/balance.json').read_text())
 r = json.loads((root/'builds/simulations.json').read_text())
-lines = ['# Balance — 0.1.0', '', 'All source numbers come from `config/balance.json`. Analytic DPS assumes perfect',
-         'alignment and accuracy; simulations below use actual actors/projectiles and a bot.', '',
-         '## Weapons and bounded progression', '',
-         '| Weapon | Damage × count | Interval | Base DPS (sustained) | Max sustained DPS |',
+lines = ['# Balance — 0.2.0', '', 'Runtime source: `config/balance.json`. All ten chapters currently use this same',
+         'ruleset; only campaign unlock/selection persists. Cash and upgrades reset each run.', '',
+         '## Tempo and economy', '',
+         f"Run: {c['run_seconds']:g} seconds before the boss. Forward speed ramps from {c['run_speed']:g}",
+         f"to {c['max_run_speed']:g} m/s; lateral speed is {c['strafe_speed']:g} m/s (one lane in 0.25 s).",
+         'Integrated road distance to boss: 1875 m. Enemy spawn distance: 115 m, hidden',
+         'in horizon haze rather than born near the camera. Gate approach distance is',
+         'computed by integrating the next seven seconds of speed, growing 70.8–105 m.', '',
+         '| Enemy | HP | Reward | Breach penalty | Attack interval |',
          '|---|---:|---:|---:|---:|']
-for name, w in c['weapons'].items():
-    duty = 2.2/4.2 if name == 'laser' else 1
-    dps = w['damage']*w['count']/w['interval']*duty
+for e in c['enemies']:
+    lines.append(f"| {e['name']} | {e['hp']:g} | ${e['reward']} | ${e['penalty']} | {e['attack']:g} s |")
+lines += ['', 'The elite primes its first rocket at 0.12 s after spawning, including at the',
+          'horizon. Later attacks repeat every 3.2 s; guidance remains limited and locks',
+          'after 1.65 s. Rockets have twelve seconds of life to cover the longer approach.', '',
+          f"Start cash ${c['starting_money']}; weapon configurations total $575.",
+          f"Damage costs {c['damage_costs']} (${sum(c['damage_costs'])} total);",
+          f"rate costs {c['rate_costs']} (${sum(c['rate_costs'])} total). Full arsenal and",
+          'upgrades cost $1645. Eight gate groups spawn at 14/31/49/67/85/103/121/139 s.',
+          'Answering all correctly awards $540. Breaches are deliberately more forgiving',
+          'than v0.1; physical pickup and meaningful debt/seizure rules remain unchanged.', '',
+          '## Weapons', '',
+          '| Weapon | Damage × count | Interval | Base sustained DPS | Max sustained DPS |',
+          '|---|---:|---:|---:|---:|']
+for name,w in c['weapons'].items():
+    duty=2.2/4.2 if name=='laser' else 1
+    dps=w['damage']*w['count']/w['interval']*duty
     lines.append(f"| {name} | {w['damage']:g} × {w['count']} | {w['interval']:g} s | {dps:.2f} | {dps*2.88:.2f} |")
-lines += ['', 'Damage scales as `1 + 0.20 × level`; rate as `1 + 0.15 × level`.',
-          'Four levels each give **2.88×** maximum DPS, without exponential stacking.',
-          'Fan DPS sums all three directions; a small distant target usually intersects only',
-          'one log (13.54 base DPS). Twin streams trade reduced per-projectile damage for',
-          'coverage; a target can sit between streams. Heavy can hit three targets, but',
-          'never hits one target repeatedly with the same shot. Laser burst DPS is 60,',
-          'then ~2.2 s firing / ~2 s cooling; switching does not reset heat.', '',
-          'An illustrative 60% hit rate gives `0.6 × sustained DPS`, before target',
-          'penetration or fan coverage. Against 24/55/120 HP, base logs need 2/5/10',
-          'hits: 0.4/1.6/3.6 s from the first impact, plus projectile travel. Base ideal',
-          'boss fire takes ~20 s; maximum logs ~6.94 s. Actual player positioning,',
-          'enemy survivors, travel time, heat and wasted shots extend those estimates.', '',
-          '## Economy and difficulty', '',
-          f"Start cash: ${c['starting_money']}. All weapon configurations cost $575 together.",
-          f"Damage levels: {c['damage_costs']}, total ${sum(c['damage_costs'])}.",
-          f"Rate levels: {c['rate_costs']}, total ${sum(c['rate_costs'])}.",
-          f"Full arsenal plus all levels costs **${575+sum(c['damage_costs'])+sum(c['rate_costs'])}**.",
-          'Six correct gates award $330. No income is added for a missed coin. A ten-second',
-          'continuous debt period seizes one eligible asset, without extra cash penalties.',
-          'The protected base weapon and later math rewards allow recovery; negative cash',
-          'does not directly cause game over. The bot can still win while in debt.', '',
-          'Threat budget increases linearly 4 → 16 over 90 s, with costs 1/3/7. Spawning',
-          'interval decreases 2.4 → 1.35 s; enemy HP stays fixed. Gate windows soften',
-          'attacks and spawning. Boss HP is 600 and collision deadline ~25 s.', '',
-          '## Deterministic full-scene simulations', '',
-          'Three seeds (11, 42, 91), nine purchase/input strategies, 27 complete attempts.',
-          'The bot tracks nearby enemies/loot, reserves answer lanes shortly before gates,',
-          'and makes simple local projectile dodges. No HP, money or damage cheats are used.',
-          'The losses strategy intentionally wanders; bad_math chooses incorrect answers.',
-          'These are development probes, **not human win rates**. Strategies can diverge',
-          'after small frame-order/input changes, so compare the checked-in raw results.', '',
+lines += ['', 'Damage factor `1 + .20 × level`, rate factor `1 + .15 × level`, cap four',
+          'levels each: maximum power is 2.88×. Values assume perfect physical hits.',
+          'For illustrative 60% accuracy, effective DPS is 0.6 times the table. Fan',
+          'sums three directions; a small single target generally catches only one.',
+          'Heavy penetrates three unique targets. Twin offsets are ±0.5 m. Laser burst',
+          'is 60 DPS, followed by forced cooling; switching preserves heat.', '',
+          'Base log hits to kill 24/55/120 HP: 2/5/10 hits (0.4/1.6/3.6 s after first',
+          'impact, plus travel). Boss HP 600, collision deadline ~25 s. Theoretical',
+          'perfect base log boss damage time ~20 s, maximum logs ~6.94 s; misses,',
+          'survivors and projectile travel extend actual fights.', '',
+          '## Full-scene simulations', '',
+          'Nine strategies × three seeds (11/42/91). Actual game/projectiles/economy,',
+          'no granted money or HP, automated steering only. This is not a human win rate.',
+          'Bad-math chooses incorrect answers; losses wanders and misses pickups.', '',
           '| Strategy | Wins / 3 | Winning boss phase range | Final cash range |',
           '|---|---:|---:|---:|']
 for strategy in dict.fromkeys(x['strategy'] for x in r):
-    rows = [x for x in r if x['strategy'] == strategy]
-    wins = [x for x in rows if x['state'] == 'victory']
-    durations = [x['seconds']-90 for x in wins]
-    duration = f'{min(durations):.1f}–{max(durations):.1f} s' if durations else '—'
-    lines.append(f"| {strategy} | {len(wins)} | {duration} | ${min(x['money'] for x in rows)} to ${max(x['money'] for x in rows)} |")
-lines += ['', 'Prepared damage/rate/heavy builds generally defeat the boss in about 8–15 s.',
-          'Base and poorly funded laser builds face the deadline. Some bot runs lose; full',
-          'purchases are unaffordable within observed earnings. Kill rewards are potential',
-          'cash until collected; breach losses and misses materially affect purchasing.', '',
-          f"Observed collected-kill cash: ${min(x['collected'] for x in r)}–${max(x['collected'] for x in r)};",
-          f"kill reward potential: ${min(x['kill_rewards'] for x in r)}–${max(x['kill_rewards'] for x in r)};",
-          f"breach charges: ${min(x['breach_cost'] for x in r)}–${max(x['breach_cost'] for x in r)}.",
-          'The $550–700 income target is an early hypothesis, not a guaranteed reward budget:',
-          'good math plus successful pickups can exceed it; poor play earns much less.',
-          'Future tuning should use real touch play, accuracy and player telemetry recorded',
-          'locally with consent, rather than optimizing only for this bot.', '',
-          '[Raw simulation data](simulation-results.json). Regenerate with `./tools/check.sh`',
-          'then `python3 tools/report_balance.py`.', '']
+    rows=[x for x in r if x['strategy']==strategy]
+    wins=[x for x in rows if x['state']=='victory']
+    duration=[x['seconds']-c['run_seconds'] for x in wins]
+    timing=f'{min(duration):.1f}–{max(duration):.1f} s' if duration else '—'
+    lines.append(f"| {strategy} | {len(wins)} | {timing} | ${min(x['money'] for x in rows)} to ${max(x['money'] for x in rows)} |")
+lines += ['', f"Collected kill cash: ${min(x['collected'] for x in r)}–${max(x['collected'] for x in r)};",
+          f"potential dropped cash: ${min(x['kill_rewards'] for x in r)}–${max(x['kill_rewards'] for x in r)};",
+          f"breach costs: ${min(x['breach_cost'] for x in r)}–${max(x['breach_cost'] for x in r)}.",
+          'Extra time and higher rewards make this version intentionally more generous.',
+          'These bot strategies optimize one configuration; they do not prove a player',
+          'can or cannot buy the whole shop. Phone play remains necessary for final tuning.', '',
+          '[Raw data](simulation-results.json). Regenerate: `./tools/check.sh` then',
+          '`python3 tools/report_balance.py`.', '']
 (root/'docs/BALANCE.md').write_text('\n'.join(lines))
-(root/'docs/simulation-results.json').write_text(json.dumps(r, indent=2)+'\n')
+(root/'docs/simulation-results.json').write_text(json.dumps(r,indent=2)+'\n')

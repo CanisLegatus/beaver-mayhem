@@ -1,11 +1,11 @@
-# Verification — 2026-11-11
+# Verification — 2026-11-12
 
 ## Commands
 
 ```sh
 ./tools/check.sh
 ~/.local/bin/godot --path . --script res://tests/gui_input.gd
-~/.local/bin/godot --path . --script res://tests/capture.gd
+~/.local/bin/godot --path . --script res://tests/capture_v2.gd
 ~/.local/bin/godot --path . --script res://tests/profile.gd
 ANDROID_HOME="$HOME/.local/share/beaver-android-sdk" ./tools/build_android.sh
 python3 tools/report_balance.py
@@ -17,7 +17,7 @@ failures, runtime errors and leaked-object warnings as failures. Logs are writte
 to ignored builds/. Tests do not require a third-party framework.
 
 ## Results and scope
-- **2784 assertions passed**, zero failures: movement bounds/speed/reset; independent
+- **2819 assertions passed**, zero failures: movement bounds/speed/reset; independent
   straight shots; actual swept hits; ordinary vs heavy penetration and per-target
   hit guards; HP/death once; all three enemy attacks; rocket side launch, engine,
   angular bound and final lock; offscreen expiry; physical coin collection vs distant
@@ -30,7 +30,7 @@ to ignored builds/. Tests do not require a third-party framework.
   overrides. Nine strategies × three seeds. Object-cap invariants pass. Detailed
   outcomes are recorded in BALANCE.md and simulation-results.json. These are bot
   probes, not claims that a human tester played 27 sessions.
-- **6 graphical viewport input checks passed** on Linux: menu start, mouse drag,
+- **7 graphical viewport input checks passed** on Linux: chapter selection/story skip, mouse drag,
   live upgrade button, HUD input isolation, resume, restart. They exercise GUI input
   propagation in a rendered window. Synthetic ScreenTouch/ScreenDrag ownership and
   suppression of emulated duplicate mouse input are tested separately by the rules suite.
@@ -40,7 +40,7 @@ to ignored builds/. Tests do not require a third-party framework.
   Captures are scripted fixtures; they are not screenshots of human-earned victories.
 - APK export completed using matching 4.7.2 native Android templates. Signature
   verification passed, and manifest reports package org.canislegatus.beavermayhem,
-  version 0.1.0/code 1, ARM64 only, min API 24, target API 36, GLES 3.0, portrait.
+  version 0.2.0/code 2, ARM64 only, min API 24, target API 36, GLES 3.0, portrait.
   APK contents were inspected and SHA256SUMS generated. After repairing the pinned
   native exporter's duplicate-provider authorities, the APK was re-aligned (16 KiB),
   re-signed and independently parsed by aapt. Structural checks verify unique
@@ -49,7 +49,7 @@ to ignored builds/. Tests do not require a third-party framework.
 
 ## Graphical checks and performance
 See screenshots/ and profile-results.json. For 600 measured frames at 432×864,
-mean frame interval was 16.67 ms, p95 17.41 ms, maximum 27.03 ms; average draw calls 417.44.
+Metrics for the current character batching pass are recorded in profile-results.json.
 This is a frame-paced Linux sample, not a GPU-only benchmark or Android result. The profile uses a deliberately dense
 rendered fixture (12 initial enemies, fan, gate) with elevated test-only HP so the
 measurement is not interrupted by defeat. This fixture is separate from balance
@@ -72,3 +72,15 @@ negative cash and seizure; win/lose and restart repeatedly. Check text, safe are
 rocket telegraphs and heat on the actual display. Measure a full run with device
 profiling tools, including frame pacing and temperature. Report device/build/OS
 with each observation. Do not mark these steps passed without performing them.
+
+## v0.2 additional coverage
+Tests verify fresh saves, sequential unlocks, locked-level guards, persisted reload,
+corrupt-value bounds, chapter-10 cap and replay stability. Actual projectile boss
+victory unlocks the next chapter. Opening-map state, family visibility, cinematic
+pause/time isolation and final camera position are checked. Speed endpoints,
+integrated distance, speed-dependent preview distance, horizon births, immediate
+elite launch, far rocket survival, repeat interval and night lighting are checked.
+Screenshots now include roadmap (locked/unlocked), family, hero orbit, day/night,
+combat, boss and victory. Captures remain scripted fixtures rather than human runs.
+Music/samples load and play in the rendered session; subjective mixing and phone
+loudness remain unverified. Ten chapters intentionally reuse content, as requested.

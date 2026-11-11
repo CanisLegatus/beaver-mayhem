@@ -19,13 +19,18 @@ func run() -> void:
 	root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
 	root.content_scale_size = Vector2i(432,864)
 	var game: BeaverGame = load("res://scenes/main.tscn").instantiate()
+	game.progression = Progression.new("user://test-progress.cfg")
+	game.progression.unlocked = 1
+	game.progression.selected = 1
 	root.add_child(game)
 	await process_frame
 	game.set_physics_process(false)
 	for i in range(3): await process_frame
-	click(game.hud.play_button.get_global_rect().get_center())
+	click(game.level_map.card_buttons[0].get_global_rect().get_center())
 	await process_frame
-	check(game.state == "playing", "menu button starts run")
+	check(game.state == "cinematic", "map starts first-level cinematic")
+	click(game.hud.skip_button.get_global_rect().get_center())
+	check(game.state == "playing", "skip story enters gameplay")
 	var down := InputEventMouseButton.new()
 	down.position = Vector2(216,450)
 	down.button_index = MOUSE_BUTTON_LEFT
@@ -59,6 +64,7 @@ func run() -> void:
 	await process_frame
 	Art.materials.clear()
 	Art.meshes.clear()
+	Sculpt.clear_cache()
 	await create_timer(0.15).timeout
 	print("GUI INPUT: ",failures," failures")
 	quit(0 if failures == 0 else 1)

@@ -20,3 +20,19 @@
   the manifest string pool after export, align and re-sign with the local debug key;
   validate using Android's independent aapt parser and apksigner. The public launcher
   is the GodotAppLauncher alias; GodotApp itself is intentionally not exported.
+
+## v0.2 — player feedback
+- Expand runs to 150 seconds and ramp speed 10 → 15 m/s. Steering rises to 8 m/s.
+  Share the curve across all relative-world systems so coins and gates do not drift.
+- Spawn enemies 115 m away in haze; integrate a seven-second gate approach. Extend
+  projectile bounds/lifetime for immediate far elite launches (0.12 s / 3.2 s repeat).
+- Lower breach penalties to 5/10/18 and raise rewards to 10/25/55, especially engineers.
+- Ten identical chapters are a real saved progression, not ten unguarded menu links.
+  Only next chapter unlocks on victory; reset cash/weapons per attempt.
+- A twelve-second skippable 3D family/dam story runs before chapter one. Story time
+  is independent of the run and background pause preserves its camera state.
+- Use original smooth sculpted meshes/materials and downloaded CC0 audio/VFX. Keep
+  sources/licenses in the repo and APK. Photorealism is reserved for the generated
+  launcher icon; in-game models remain mobile-oriented semi-realistic 3D assets.
+- Disable 3D while the roadmap is open. Merge static character parts by material
+  while preserving named foot animation pivots; batch distant trees as well.

@@ -2,18 +2,22 @@
 
 Offline portrait 3D arcade runner/shooter for Android. A cartoon beaver defends the
 forest against lumberjacks, engineers and a rocket-launching parody of Elon Musk.
-The run lasts 90 seconds before the approaching DEFORESTATOR bulldozer finale.
+The run lasts 150 seconds before the approaching DEFORESTATOR bulldozer finale.
 
 ## Game flow
-Main menu → Playing → Victory or Game Over → Play Again. Pause/resume is available
+Campaign map → optional first-chapter cinematic → Playing → Victory or Game Over.
+Play Again retries the current chapter; Level Map returns to chapter selection.
+Victory unlocks only the next chapter and offers Next Chapter. All ten chapters
+currently have identical rules, length and content. A fresh save unlocks chapter one.
+Progress is atomically saved in user://progress.cfg; cash/upgrades reset per attempt. Pause/resume is available
 from the HUD, Escape, Android Back, or application backgrounding. Gameplay is frozen
 on pause and result screens; purchases never pause. Restart clears health, cash,
 upgrades, ownership, heat, cooldowns, actors, loot, effects, gates and spawn timers.
 
 ## Movement and combat
 The road has five lanes at x = −4, −2, 0, 2, 4 metres. Movement is continuous,
-clamped to ±4.6 m, with a maximum lateral speed of 6 m/s (one lane in 0.33 s).
-Forward progress is automatic at 8 m/s, represented by scrolling terrain around a
+clamped to ±4.6 m, with a maximum lateral speed of 8 m/s (one lane in 0.25 s).
+Forward progress is automatic from 10 to 15 m/s, represented by scrolling terrain around a
 floating origin. Drag horizontally with one finger; desktop supports mouse drag,
 A/D and arrows. HUD interaction does not steer. No jump, dash or invulnerability.
 
@@ -28,9 +32,9 @@ Screen flash, recoil, particles and sounds give hit feedback.
 ## Enemies and progression
 | Type | HP | Attack / interval | Reward | Breach |
 |---|---:|---|---:|---:|
-| Lumberjack | 24 | straight axe, 4 HP / 3.5 s | $7 | −$12 |
-| Engineer | 55 | fast aimed-at-launch paper, 10 HP / 1.8 s | $16 | −$22 |
-| Elon parody | 120 | staged rocket, 24 HP / 5 s | $45 | −$40 |
+| Lumberjack | 24 | straight axe, 4 HP / 3.5 s | $10 | −$5 |
+| Engineer | 55 | fast aimed-at-launch paper, 10 HP / 1.8 s | $25 | −$10 |
+| Elon parody | 120 | staged rocket, 24 HP / 3.2 s | $55 | −$18 |
 
 The director spawns continuously with 2.4 → 1.35 s intervals. Engineers enter from
 22 s, elites from 35 s. Active threat costs 1/3/7 and is limited by 4 + 12 × progress.
@@ -41,7 +45,7 @@ Living enemies crossing behind the runner deduct money once, without HP damage.
 Rockets first travel sideways at 5 m/s. At 0.45 s the engine lights with flash,
 flame, trailing sparks and sound. Guidance is limited to 2 rad/s until age 1.65 s;
 after that trajectory locks. Guided acceleration is capped at 18 m/s. Lifetime
-is six seconds; rockets can miss, exit the road and expire. Axes and paper do not guide.
+is twelve seconds; rockets can miss, exit the road and expire. Axes and paper do not guide.
 
 ## Cash, debt and choices
 Start with $40. Kills drop three physical rotating coins with an exact total equal
@@ -72,7 +76,8 @@ Only one configuration fires at a time. Heat persists across switching.
 Exact values and DPS are in BALANCE.md and config/balance.json.
 
 ## Math gates
-Groups spawn at 10, 23, 37, 51, 65 and 79 seconds, 48 m (six seconds) ahead.
+Groups spawn at 14, 31, 49, 67, 85, 103, 121 and 139 seconds. Their initial
+distance integrates the next seven seconds of accelerating speed (about 71–105 m).
 The central three lanes each display one unique answer; the outer lanes and gaps
 bypass the group without reward or penalty. The HUD repeats the expression,
 left-to-right choices and time to crossing so the problem is readable at distance.
@@ -82,17 +87,34 @@ add a final term (+$80/−$55). Choices are shuffled independently and contain
 exactly one correct result. No zero division or rounding questions.
 
 ## Finale
-At 90 seconds ordinary spawning stops. Survivors still attack and may breach.
+At 150 seconds ordinary spawning stops. Survivors still attack and may breach.
 A 600 HP procedural bulldozer appears 38 m ahead, approaches at 1.35 m/s, and
 collides at 4.2 m (~25 s deadline). All weapons can hit it. Zero boss HP triggers
 stopping, fragmentation/smoke particles, explosion sound and Victory. The dozer
 reaching the beaver ends the run regardless of player HP.
 
 ## Presentation
-Original low-poly forest, five reusable road chunks, trees, stumps, rocks, grass
+Atmospheric forest, seven reusable road chunks, trees, stumps, rocks, grass
 and distant hills. Beaver has face, eyes, teeth, ears, paws and flat patterned tail.
 Enemies have distinct outfits, tools and headgear; the engineer wears a white
 helmet. Characters bob, swing feet and prepare attacks. The dozer has tracks,
-wheels, cabin, windows, lights, blade and smoking exhaust. Audio is synthesized
-locally with eight bounded voices and can be muted. No ads, account, network,
-analytics, paid assets or persistent metaprogression in this release.
+wheels, cabin, windows, lights, blade and smoking exhaust. Original cues are mixed with downloaded CC0 recordings and a looping cinematic
+music track; eight bounded SFX voices plus one music voice can be muted. No ads, account, network,
+analytics or paid assets. Chapter unlocks persist locally.
+
+## v0.2 presentation and opening story
+The first chapter starts with the mother beaver and kit seated at their damaged
+dam, reaching toward its logs and crying. They carry no weapons. The hero walks
+forward while the camera completes a 360° orbit, then eases to the gameplay view.
+The story lasts twelve seconds, freezes run clocks/spawns, can be skipped and
+pauses correctly when backgrounded. Retrying a failed run starts gameplay directly;
+selecting chapter one from the map replays the story.
+
+Enemies spawn 115 m ahead in horizon haze. Elites prime a rocket at 0.12 s from
+birth and repeat every 3.2 s. Friendly projectiles remain straight; the extended
+projectile bounds allow those far-away rockets to survive their initial flight.
+Daylight, dusk, night and dawn cycle over 110 seconds. Moonlight and ambient fill
+preserve visibility at night. Pine and broadleaf groves alternate with rivers,
+flowers, fallen logs, stumps and rock formations. Detailed smooth character meshes
+use procedural fur/cloth materials; downloaded CC0 textures supply smoke, sparks
+and flashes. The photorealistic beaver icon is AI generated; see ASSETS.md.

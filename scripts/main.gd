@@ -1,6 +1,11 @@
 class_name BeaverGame
 extends Node3D
 ## Composition root; all runtime motion uses a floating origin at the runner.
+var progression := Progression.new()
+var level_map: LevelMap
+var cinematic: OpeningCinematic
+var current_level := 1
+var paused_from := "playing"
 var player := PlayerController.new()
 var combat := PlayerCombat.new()
 var economy := Economy.new()
@@ -43,14 +48,29 @@ func _ready() -> void:
 	add_child(beaver)
 	camera = Camera3D.new()
 	add_child(camera)
-	camera.position = Vector3(0, 12.5, 16)
-	camera.look_at(Vector3(0, 0, -15))
+	camera.position = Vector3(0, 10.5, 14.5)
+	camera.look_at(Vector3(0, 0, -22))
 	camera.fov = 58
-	camera.far = 180
+	camera.far = 320
 	camera.current = true
 	hud = GameHUD.new()
 	add_child(hud)
-	hud.start_requested.connect(start_run)
+	level_map = LevelMap.new()
+	add_child(level_map)
+	level_map.level_selected.connect(select_level)
+	cinematic = OpeningCinematic.new()
+	add_child(cinematic)
+	cinematic.setup(camera,beaver)
+	cinematic.dam_creaked.connect(func() -> void: audio.play("dam"))
+	level_map.sound_requested.connect(hud.sound_requested.emit)
+	cinematic.finished.connect(func() -> void:
+		state = "playing"
+		hud.set_state(state)
+		audio.set_mood(state))
+	hud.start_requested.connect(func() -> void: select_level(progression.selected))
+	hud.map_requested.connect(show_map)
+	hud.next_requested.connect(func() -> void: select_level(mini(10,current_level+1)))
+	hud.skip_requested.connect(cinematic.complete)
 	hud.restart_requested.connect(start_run)
 	hud.pause_requested.connect(toggle_pause)
 	hud.sound_requested.connect(func() -> void:
@@ -96,9 +116,19 @@ func _ready() -> void:
 		audio.play("alarm")
 		effects.burst(beaver.position + Vector3.UP, Color("ff7755"), 10))
 	hud.refresh(health, economy, seconds, enemies.boss, combat)
+	show_map()
 	if "--demo" in OS.get_cmdline_user_args(): start_run()
 
 func start_run() -> void:
+	get_viewport().disable_3d = false
+	if level_map != null: level_map.root.hide()
+	if cinematic != null: cinematic.cancel()
+	hud.root.show()
+	beaver.rotation = Vector3.ZERO
+	camera.position = Vector3(0,10.5,14.5)
+	camera.look_at(Vector3(0,0,-22))
+	world.set_time(0)
+	audio.set_mood("playing")
 	projectiles.clear()
 	enemies.clear()
 	loot.clear()
@@ -116,11 +146,14 @@ func start_run() -> void:
 	beaver.position = Vector3.ZERO
 	state = "playing"
 	hud.set_state(state)
-	hud.show_math(gates.groups)
+	hud.show_math(gates.groups,seconds)
 	hud.notify("DEFEND THE FOREST!")
 
 func _physics_process(delta: float) -> void:
 	hud.tick(delta)
+	if state == "cinematic":
+		cinematic.tick(delta)
+		return
 	if state != "playing":
 		if state == "victory": effects.tick(delta)
 		hud.show_math([])
@@ -129,8 +162,8 @@ func _physics_process(delta: float) -> void:
 	var keyboard := 0.0
 	if Input.is_physical_key_pressed(KEY_A) or Input.is_physical_key_pressed(KEY_LEFT): keyboard -= 1
 	if Input.is_physical_key_pressed(KEY_D) or Input.is_physical_key_pressed(KEY_RIGHT): keyboard += 1
-	player.tick(delta, keyboard)
-	world.scroll(delta)
+	player.tick(delta, keyboard, Rules.run_speed(seconds))
+	world.scroll(delta,seconds)
 	beaver.position = Vector3(player.x, absf(sin(seconds * 12)) * 0.09, 0)
 	beaver.rotation.z = clampf((player.target_x - player.x) * -0.08, -0.18, 0.18)
 	beaver.get_node("FootL").rotation.x = sin(seconds * 12) * 0.6
@@ -154,7 +187,7 @@ func _physics_process(delta: float) -> void:
 	if state != "playing": return
 	enemies.tick(delta, seconds, player.x, gates.near_player())
 	if state != "playing": return
-	loot.tick(delta, player.x)
+	loot.tick(delta, player.x,Rules.run_speed(seconds))
 	economy.tick(delta)
 	effects.tick(delta)
 	alarm_timer -= delta
@@ -167,7 +200,7 @@ func _physics_process(delta: float) -> void:
 			effects.burst(enemies.boss.visual.position + Vector3(1.3,4,-1.5), Color("606b66"), 2)
 			smoke_timer = 0.25
 	hud.refresh(health, economy, seconds, enemies.boss, combat)
-	hud.show_math(gates.groups)
+	hud.show_math(gates.groups,seconds)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and event.physical_keycode == KEY_ESCAPE:
@@ -182,8 +215,11 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and not event.pressed: player.mouse_down = false
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_PAUSED and state == "playing": toggle_pause()
-	if what == NOTIFICATION_WM_GO_BACK_REQUEST and state == "playing": toggle_pause()
+	if what == NOTIFICATION_APPLICATION_PAUSED:
+		if state in ["playing","cinematic"]: toggle_pause()
+		if audio != null and audio.music != null: audio.music.stream_paused = true
+	if what == NOTIFICATION_APPLICATION_RESUMED and audio != null: audio.set_mood(state)
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST and state in ["playing","cinematic"]: toggle_pause()
 
 func purchase(item: String) -> void:
 	if state != "playing": return
@@ -203,11 +239,35 @@ func take_damage(amount: float) -> void:
 	if health.dead: lose("The beaver ran out of HP.")
 
 func toggle_pause() -> void:
-	if state not in ["playing", "paused"]: return
-	state = "paused" if state == "playing" else "playing"
+	if state not in ["playing", "cinematic", "paused"]: return
+	if state == "paused": state = paused_from
+	else:
+		paused_from = state
+		state = "paused"
 	player.pointer_id = -1
 	player.mouse_down = false
 	hud.set_state(state)
+	audio.set_mood(state)
+
+func select_level(level: int) -> void:
+	if not progression.select(level): return
+	current_level = level
+	start_run()
+	if level == 1:
+		state = "cinematic"
+		cinematic.start()
+		hud.set_state(state)
+		audio.set_mood(state)
+
+func show_map() -> void:
+	get_viewport().disable_3d = true
+	state = "menu"
+	if cinematic != null: cinematic.cancel()
+	player.pointer_id = -1
+	player.mouse_down = false
+	hud.root.hide()
+	level_map.show_campaign(progression)
+	audio.set_mood(state)
 
 func lose(reason: String) -> void:
 	if state != "playing": return
@@ -217,14 +277,24 @@ func lose(reason: String) -> void:
 	hud.overlay_text.text = reason + "\nCash: $%d  •  Time: %ds" % [economy.money, int(seconds)]
 	hud.refresh(health, economy, seconds, enemies.boss, combat)
 	audio.play("loss")
+	audio.set_mood(state)
 
 func win() -> void:
 	if state != "playing": return
 	state = "victory"
+	if not progression.complete(current_level):
+		hud.notify("PROGRESS SAVE FAILED")
+	audio.set_mood(state)
 	var pos: Vector3 = enemies.boss.visual.position
 	for i in range(5): effects.burst(pos + Vector3(i - 2, 1.0 + i * 0.4, 0), Art.GOLD if i % 2 == 0 else Art.DARK, 18)
 	hud.set_state(state)
+	if current_level == 10: hud.play_button.text = "REPLAY FINAL CHAPTER  →"
 	hud.overlay_text.text = "The forest is yours again.\nCash: $%d  •  Time: %ds" % [economy.money, int(seconds)]
 	hud.refresh(health, economy, seconds, enemies.boss, combat)
 	audio.play("explosion")
 	audio.play("victory")
+
+func _exit_tree() -> void:
+	Art.materials.clear()
+	Art.meshes.clear()
+	Sculpt.clear_cache()

@@ -1,11 +1,16 @@
 class_name GameHUD
 extends CanvasLayer
+signal map_requested
+signal next_requested
+signal skip_requested
 signal start_requested
 signal restart_requested
 signal pause_requested
 signal sound_requested
 signal purchase_requested(item: String)
 signal cycle_requested
+var top_panel: Control
+var bottom_panel: Control
 var root: Control
 var hp_label: Label
 var money_label: Label
@@ -27,6 +32,8 @@ var flash: ColorRect
 var notice_time := 0.0
 var state := "menu"
 var sound_button: Button
+var skip_button: Button
+var cinematic_caption: Label
 
 func _ready() -> void:
 	root = Control.new()
@@ -52,6 +59,7 @@ func _ready() -> void:
 	theme.set_color("font_disabled_color", "Button", Color("78958b"))
 	root.theme = theme
 	var top := VBoxContainer.new()
+	top_panel = top
 	top.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 	top.offset_left = 16
 	top.offset_right = -16
@@ -96,6 +104,7 @@ func _ready() -> void:
 	message.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(message)
 	var bottom := VBoxContainer.new()
+	bottom_panel = bottom
 	bottom.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	bottom.offset_left = 12
 	bottom.offset_right = -12
@@ -131,6 +140,18 @@ func _ready() -> void:
 	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	flash.color = Color(1,0.15,0.05,0)
 	root.add_child(flash)
+	skip_button = make_button("SKIP STORY  →", skip_requested.emit)
+	skip_button.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	skip_button.offset_left = -164
+	skip_button.offset_top = -94
+	skip_button.offset_right = -16
+	skip_button.offset_bottom = -44
+	root.add_child(skip_button)
+	cinematic_caption = make_label("THEIR HOME. HIS PROMISE.\nHold the dam. I will stop them.",21,Color("fff1cb"))
+	cinematic_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	cinematic_caption.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+	cinematic_caption.offset_top = 65
+	root.add_child(cinematic_caption)
 	build_overlay()
 	apply_safe_area()
 	get_viewport().size_changed.connect(apply_safe_area)
@@ -186,22 +207,28 @@ func build_overlay() -> void:
 	column.add_child(overlay_text)
 	play_button = make_button("DEFEND THE FOREST  →", func() -> void:
 		if state == "paused": pause_requested.emit()
+		elif state == "victory": next_requested.emit()
 		else: start_requested.emit())
 	column.add_child(play_button)
 	restart_button = make_button("PLAY AGAIN  ↻", restart_requested.emit)
 	column.add_child(restart_button)
+	column.add_child(make_button("LEVEL MAP", map_requested.emit))
 	set_state("menu")
 
 func set_state(value: String) -> void:
 	state = value
-	overlay.visible = value != "playing"
-	play_button.visible = value in ["menu", "paused"]
+	top_panel.visible = value != "cinematic"
+	bottom_panel.visible = value != "cinematic"
+	overlay.visible = value not in ["playing","cinematic"]
+	skip_button.visible = value == "cinematic"
+	cinematic_caption.visible = value == "cinematic"
+	play_button.visible = value in ["menu", "paused","victory"]
 	restart_button.visible = value in ["victory", "game_over", "paused"]
-	play_button.text = "RESUME  →" if value == "paused" else "DEFEND THE FOREST  →"
+	play_button.text = "RESUME  →" if value == "paused" else ("NEXT CHAPTER  →" if value == "victory" else "DEFEND THE FOREST  →")
 	match value:
 		"menu":
 			overlay_title.text = "BEAVER\nMAYHEM"
-			overlay_text.text = "Drag to dodge. Logs fly straight.\nCollect cash. Solve the gates.\nUpgrade while running.\nSurvive 90 seconds. Stop the dozer."
+			overlay_text.text = "Drag to dodge. Logs fly straight.\nCollect cash. Solve the gates.\nUpgrade while running.\nSurvive the road. Stop the dozer."
 		"paused":
 			overlay_title.text = "BREATHER"
 			overlay_text.text = "The forest can wait a moment."
@@ -217,7 +244,7 @@ func refresh(health: Health, economy: Economy, seconds: float, boss: Dictionary,
 	money_label.text = "$%d" % economy.money
 	money_label.modulate = Color("ff7961") if economy.money < 0 else Color.WHITE
 	progress.value = minf(100, seconds / float(Rules.config.run_seconds) * 100)
-	alert.text = "BANKRUPTCY ALERT  •  SEIZURE IN %.1fs" % (10.0 - economy.debt_time) if economy.money < 0 else "FOREST ROAD  /  %02d : 90" % mini(90, int(seconds))
+	alert.text = "BANKRUPTCY ALERT  •  SEIZURE IN %.1fs" % (10.0 - economy.debt_time) if economy.money < 0 else "FOREST ROAD  /  %03d : %d  •  %.0f m/s" % [mini(int(Rules.config.run_seconds), int(seconds)),int(Rules.config.run_seconds),Rules.run_speed(seconds)]
 	alert.modulate.a = (0.65 + 0.35 * sin(seconds * 7)) if economy.money < 0 else 1.0
 	for kind in ["damage", "rate"]:
 		var level := economy.damage_level if kind == "damage" else economy.rate_level
@@ -257,10 +284,10 @@ func apply_safe_area() -> void:
 	root.offset_top = maxf(0, safe.position.y * scale_factor)
 	root.offset_bottom = -maxf(0, (screen.y - safe.end.y) * scale_factor)
 
-func show_math(groups: Array[Dictionary]) -> void:
+func show_math(groups: Array[Dictionary], seconds: float = 0.0) -> void:
 	math_preview.text = ""
 	if state != "playing" or groups.is_empty(): return
 	var group: Dictionary = groups[0]
 	if group.used: return
 	var problem: Dictionary = group.problem
-	math_preview.text = problem.expression + "   [%.1fs]" % maxf(0.0, -group.z / float(Rules.config.run_speed)) + "\n" + "  %s   /   %s   /   %s" % problem.choices
+	math_preview.text = problem.expression + "   [%.1fs]" % maxf(0.0, -group.z / Rules.run_speed(seconds)) + "\n" + "  %s   /   %s   /   %s" % problem.choices

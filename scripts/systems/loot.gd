@@ -14,10 +14,10 @@ func drop(pos: Vector2, reward: int) -> void:
 		mesh.rotation.x = PI / 2
 		coins.append({"pos": pos + Vector2((i-1) * 0.26, 0), "visual": visual, "amount": amount, "age": 0.0})
 
-func tick(delta: float, player_x: float) -> void:
+func tick(delta: float, player_x: float, speed: float = -1.0) -> void:
 	for coin in coins.duplicate():
 		coin.age += delta
-		coin.pos.y += float(Rules.config.run_speed) * delta
+		coin.pos.y += (float(Rules.config.run_speed) if speed < 0 else speed) * delta
 		var offset: Vector2 = Vector2(player_x,0) - coin.pos
 		if offset.length() < float(Rules.config.loot_radius):
 			coin.pos = coin.pos.move_toward(Vector2(player_x, 0), delta * 7.0)

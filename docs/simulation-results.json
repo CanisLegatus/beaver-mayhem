@@ -1,118 +1,71 @@
 [
   {
-    "breach_cost": 398,
-    "collected": 200,
-    "hp": 10.0,
-    "kill_rewards": 207,
-    "money": 172,
+    "breach_cost": 78,
+    "collected": 675,
+    "hp": 0.0,
+    "kill_rewards": 815,
+    "money": 1097,
     "peak_entities": {
-      "coins": 9,
+      "coins": 15,
       "enemies": 6,
-      "shots": 7,
-      "vfx": 96
+      "shots": 12,
+      "vfx": 77
     },
     "purchases": [],
-    "seconds": 112.9,
+    "seconds": 138.6,
     "seed": 11,
     "seizures": 0,
-    "state": "victory",
+    "state": "game_over",
     "strategy": "base"
   },
   {
-    "breach_cost": 272,
-    "collected": 211,
-    "hp": 16.0,
-    "kill_rewards": 262,
-    "money": 309,
+    "breach_cost": 89,
+    "collected": 755,
+    "hp": 56.0,
+    "kill_rewards": 930,
+    "money": 1246,
     "peak_entities": {
-      "coins": 9,
+      "coins": 12,
       "enemies": 6,
-      "shots": 7,
+      "shots": 10,
       "vfx": 96
     },
     "purchases": [],
-    "seconds": 110.2,
+    "seconds": 170.2,
     "seed": 42,
     "seizures": 0,
     "state": "victory",
     "strategy": "base"
   },
   {
-    "breach_cost": 260,
-    "collected": 250,
-    "hp": 22.0,
-    "kill_rewards": 306,
-    "money": 360,
+    "breach_cost": 96,
+    "collected": 870,
+    "hp": 70.0,
+    "kill_rewards": 945,
+    "money": 1354,
     "peak_entities": {
-      "coins": 12,
+      "coins": 15,
       "enemies": 5,
-      "shots": 7,
+      "shots": 11,
       "vfx": 96
     },
     "purchases": [],
-    "seconds": 110.6,
+    "seconds": 169.8,
     "seed": 91,
     "seizures": 0,
     "state": "victory",
     "strategy": "base"
   },
   {
-    "breach_cost": 354,
-    "collected": 241,
-    "hp": 18.0,
-    "kill_rewards": 248,
-    "money": 32,
+    "breach_cost": 15,
+    "collected": 965,
+    "hp": 8.0,
+    "kill_rewards": 1260,
+    "money": 845,
     "peak_entities": {
-      "coins": 9,
-      "enemies": 6,
-      "shots": 8,
-      "vfx": 96
-    },
-    "purchases": [
-      "damage",
-      "damage",
-      "rate"
-    ],
-    "seconds": 104.7,
-    "seed": 11,
-    "seizures": 0,
-    "state": "victory",
-    "strategy": "damage"
-  },
-  {
-    "breach_cost": 210,
-    "collected": 265,
-    "hp": 46.0,
-    "kill_rewards": 323,
-    "money": 105,
-    "peak_entities": {
-      "coins": 9,
-      "enemies": 6,
-      "shots": 8,
-      "vfx": 96
-    },
-    "purchases": [
-      "damage",
-      "damage",
-      "rate",
-      "rate"
-    ],
-    "seconds": 101.7,
-    "seed": 42,
-    "seizures": 0,
-    "state": "victory",
-    "strategy": "damage"
-  },
-  {
-    "breach_cost": 130,
-    "collected": 341,
-    "hp": 18.0,
-    "kill_rewards": 422,
-    "money": 116,
-    "peak_entities": {
-      "coins": 12,
+      "coins": 15,
       "enemies": 4,
-      "shots": 8,
+      "shots": 17,
       "vfx": 96
     },
     "purchases": [
@@ -120,488 +73,615 @@
       "damage",
       "rate",
       "rate",
+      "rate",
       "rate"
     ],
-    "seconds": 100.0,
-    "seed": 91,
+    "seconds": 158.9,
+    "seed": 11,
     "seizures": 0,
     "state": "victory",
     "strategy": "damage"
   },
   {
-    "breach_cost": 262,
-    "collected": 287,
-    "hp": 42.0,
-    "kill_rewards": 308,
-    "money": 75,
-    "peak_entities": {
-      "coins": 9,
-      "enemies": 6,
-      "shots": 9,
-      "vfx": 96
-    },
-    "purchases": [
-      "rate",
-      "rate",
-      "damage",
-      "damage"
-    ],
-    "seconds": 103.5,
-    "seed": 11,
-    "seizures": 0,
-    "state": "victory",
-    "strategy": "rate"
-  },
-  {
-    "breach_cost": 150,
-    "collected": 296,
-    "hp": 44.0,
-    "kill_rewards": 358,
-    "money": 41,
-    "peak_entities": {
-      "coins": 9,
-      "enemies": 6,
-      "shots": 9,
-      "vfx": 96
-    },
-    "purchases": [
-      "rate",
-      "rate",
-      "damage",
-      "damage",
-      "damage"
-    ],
-    "seconds": 100.4,
-    "seed": 42,
-    "seizures": 0,
-    "state": "victory",
-    "strategy": "rate"
-  },
-  {
-    "breach_cost": 170,
-    "collected": 314,
-    "hp": 38.0,
-    "kill_rewards": 377,
-    "money": 39,
+    "breach_cost": 5,
+    "collected": 918,
+    "hp": 0.0,
+    "kill_rewards": 1155,
+    "money": 808,
     "peak_entities": {
       "coins": 12,
       "enemies": 5,
-      "shots": 8,
-      "vfx": 96
+      "shots": 17,
+      "vfx": 86
     },
     "purchases": [
-      "rate",
-      "rate",
       "damage",
       "damage",
-      "damage"
+      "rate",
+      "rate",
+      "rate",
+      "rate"
     ],
-    "seconds": 100.1,
-    "seed": 91,
+    "seconds": 150.3,
+    "seed": 42,
     "seizures": 0,
-    "state": "victory",
-    "strategy": "rate"
+    "state": "game_over",
+    "strategy": "damage"
   },
   {
-    "breach_cost": 284,
-    "collected": 262,
-    "hp": 26.0,
-    "kill_rewards": 283,
-    "money": 23,
+    "breach_cost": 33,
+    "collected": 971,
+    "hp": 62.0,
+    "kill_rewards": 1195,
+    "money": 833,
     "peak_entities": {
-      "coins": 9,
+      "coins": 15,
       "enemies": 5,
       "shots": 16,
       "vfx": 96
     },
     "purchases": [
-      "fan",
-      "damage",
-      "damage",
-      "rate"
-    ],
-    "seconds": 105.1,
-    "seed": 11,
-    "seizures": 0,
-    "state": "victory",
-    "strategy": "fan"
-  },
-  {
-    "breach_cost": 182,
-    "collected": 234,
-    "hp": 32.0,
-    "kill_rewards": 304,
-    "money": 2,
-    "peak_entities": {
-      "coins": 9,
-      "enemies": 5,
-      "shots": 19,
-      "vfx": 96
-    },
-    "purchases": [
-      "fan",
       "damage",
       "damage",
       "rate",
-      "rate"
-    ],
-    "seconds": 103.1,
-    "seed": 42,
-    "seizures": 0,
-    "state": "victory",
-    "strategy": "fan"
-  },
-  {
-    "breach_cost": 180,
-    "collected": 312,
-    "hp": 38.0,
-    "kill_rewards": 368,
-    "money": 82,
-    "peak_entities": {
-      "coins": 9,
-      "enemies": 5,
-      "shots": 18,
-      "vfx": 96
-    },
-    "purchases": [
-      "fan",
-      "damage",
-      "damage",
+      "rate",
       "rate",
       "rate"
     ],
-    "seconds": 103.0,
+    "seconds": 159.3,
     "seed": 91,
     "seizures": 0,
     "state": "victory",
-    "strategy": "fan"
+    "strategy": "damage"
   },
   {
-    "breach_cost": 228,
-    "collected": 282,
-    "hp": 50.0,
-    "kill_rewards": 331,
-    "money": 69,
-    "peak_entities": {
-      "coins": 9,
-      "enemies": 5,
-      "shots": 7,
-      "vfx": 96
-    },
-    "purchases": [
-      "heavy",
-      "damage",
-      "damage",
-      "rate"
-    ],
-    "seconds": 99.9,
-    "seed": 11,
-    "seizures": 0,
-    "state": "victory",
-    "strategy": "heavy"
-  },
-  {
-    "breach_cost": 176,
-    "collected": 221,
-    "hp": 62.0,
-    "kill_rewards": 318,
-    "money": 60,
-    "peak_entities": {
-      "coins": 15,
-      "enemies": 5,
-      "shots": 6,
-      "vfx": 96
-    },
-    "purchases": [
-      "heavy",
-      "damage",
-      "damage",
-      "rate"
-    ],
-    "seconds": 101.0,
-    "seed": 42,
-    "seizures": 0,
-    "state": "victory",
-    "strategy": "heavy"
-  },
-  {
-    "breach_cost": 90,
-    "collected": 390,
-    "hp": 48.0,
-    "kill_rewards": 467,
-    "money": 75,
-    "peak_entities": {
-      "coins": 15,
-      "enemies": 3,
-      "shots": 6,
-      "vfx": 96
-    },
-    "purchases": [
-      "heavy",
-      "damage",
-      "damage",
-      "rate",
-      "rate",
-      "rate"
-    ],
-    "seconds": 97.5,
-    "seed": 91,
-    "seizures": 0,
-    "state": "victory",
-    "strategy": "heavy"
-  },
-  {
-    "breach_cost": 398,
-    "collected": 184,
+    "breach_cost": 0,
+    "collected": 858,
     "hp": 0.0,
-    "kill_rewards": 207,
-    "money": 1,
+    "kill_rewards": 1250,
+    "money": 733,
     "peak_entities": {
-      "coins": 9,
-      "enemies": 6,
-      "shots": 11,
-      "vfx": 47
+      "coins": 15,
+      "enemies": 4,
+      "shots": 14,
+      "vfx": 70
     },
     "purchases": [
-      "twin"
+      "rate",
+      "rate",
+      "damage",
+      "damage",
+      "damage",
+      "damage"
     ],
-    "seconds": 95.1,
+    "seconds": 148.9,
     "seed": 11,
-    "seizures": 1,
+    "seizures": 0,
     "state": "game_over",
-    "strategy": "twin"
+    "strategy": "rate"
   },
   {
-    "breach_cost": 208,
-    "collected": 263,
-    "hp": 30.0,
-    "kill_rewards": 321,
-    "money": 45,
+    "breach_cost": 23,
+    "collected": 895,
+    "hp": 0.0,
+    "kill_rewards": 1110,
+    "money": 747,
     "peak_entities": {
-      "coins": 9,
-      "enemies": 6,
+      "coins": 12,
+      "enemies": 5,
+      "shots": 15,
+      "vfx": 76
+    },
+    "purchases": [
+      "rate",
+      "rate",
+      "damage",
+      "damage",
+      "damage",
+      "damage"
+    ],
+    "seconds": 153.1,
+    "seed": 42,
+    "seizures": 0,
+    "state": "game_over",
+    "strategy": "rate"
+  },
+  {
+    "breach_cost": 15,
+    "collected": 1033,
+    "hp": 90.0,
+    "kill_rewards": 1215,
+    "money": 893,
+    "peak_entities": {
+      "coins": 15,
+      "enemies": 5,
       "shots": 13,
       "vfx": 96
     },
     "purchases": [
+      "rate",
+      "rate",
+      "damage",
+      "damage",
+      "damage",
+      "damage"
+    ],
+    "seconds": 158.3,
+    "seed": 91,
+    "seizures": 0,
+    "state": "victory",
+    "strategy": "rate"
+  },
+  {
+    "breach_cost": 48,
+    "collected": 858,
+    "hp": 10.0,
+    "kill_rewards": 1005,
+    "money": 605,
+    "peak_entities": {
+      "coins": 15,
+      "enemies": 5,
+      "shots": 36,
+      "vfx": 96
+    },
+    "purchases": [
+      "fan",
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate",
+      "rate"
+    ],
+    "seconds": 161.0,
+    "seed": 11,
+    "seizures": 0,
+    "state": "victory",
+    "strategy": "fan"
+  },
+  {
+    "breach_cost": 63,
+    "collected": 865,
+    "hp": 22.0,
+    "kill_rewards": 985,
+    "money": 597,
+    "peak_entities": {
+      "coins": 12,
+      "enemies": 6,
+      "shots": 35,
+      "vfx": 96
+    },
+    "purchases": [
+      "fan",
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate",
+      "rate"
+    ],
+    "seconds": 161.3,
+    "seed": 42,
+    "seizures": 0,
+    "state": "victory",
+    "strategy": "fan"
+  },
+  {
+    "breach_cost": 30,
+    "collected": 933,
+    "hp": 42.0,
+    "kill_rewards": 1070,
+    "money": 698,
+    "peak_entities": {
+      "coins": 15,
+      "enemies": 5,
+      "shots": 35,
+      "vfx": 96
+    },
+    "purchases": [
+      "fan",
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate",
+      "rate"
+    ],
+    "seconds": 161.3,
+    "seed": 91,
+    "seizures": 0,
+    "state": "victory",
+    "strategy": "fan"
+  },
+  {
+    "breach_cost": 10,
+    "collected": 906,
+    "hp": 42.0,
+    "kill_rewards": 1270,
+    "money": 661,
+    "peak_entities": {
+      "coins": 15,
+      "enemies": 5,
+      "shots": 10,
+      "vfx": 96
+    },
+    "purchases": [
+      "heavy",
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate",
+      "rate"
+    ],
+    "seconds": 156.6,
+    "seed": 11,
+    "seizures": 0,
+    "state": "victory",
+    "strategy": "heavy"
+  },
+  {
+    "breach_cost": 5,
+    "collected": 924,
+    "hp": 72.0,
+    "kill_rewards": 1300,
+    "money": 684,
+    "peak_entities": {
+      "coins": 15,
+      "enemies": 4,
+      "shots": 12,
+      "vfx": 96
+    },
+    "purchases": [
+      "heavy",
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate",
+      "rate"
+    ],
+    "seconds": 156.5,
+    "seed": 42,
+    "seizures": 0,
+    "state": "victory",
+    "strategy": "heavy"
+  },
+  {
+    "breach_cost": 0,
+    "collected": 949,
+    "hp": 100.0,
+    "kill_rewards": 1250,
+    "money": 714,
+    "peak_entities": {
+      "coins": 15,
+      "enemies": 4,
+      "shots": 11,
+      "vfx": 96
+    },
+    "purchases": [
+      "heavy",
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate",
+      "rate"
+    ],
+    "seconds": 156.6,
+    "seed": 91,
+    "seizures": 0,
+    "state": "victory",
+    "strategy": "heavy"
+  },
+  {
+    "breach_cost": 15,
+    "collected": 945,
+    "hp": 38.0,
+    "kill_rewards": 1275,
+    "money": 670,
+    "peak_entities": {
+      "coins": 15,
+      "enemies": 4,
+      "shots": 28,
+      "vfx": 96
+    },
+    "purchases": [
       "twin",
       "damage",
       "damage",
+      "rate",
+      "rate",
+      "rate",
       "rate"
     ],
-    "seconds": 101.4,
+    "seconds": 157.7,
+    "seed": 11,
+    "seizures": 0,
+    "state": "victory",
+    "strategy": "twin"
+  },
+  {
+    "breach_cost": 0,
+    "collected": 911,
+    "hp": 16.0,
+    "kill_rewards": 1190,
+    "money": 651,
+    "peak_entities": {
+      "coins": 15,
+      "enemies": 4,
+      "shots": 27,
+      "vfx": 96
+    },
+    "purchases": [
+      "twin",
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate",
+      "rate"
+    ],
+    "seconds": 157.6,
     "seed": 42,
     "seizures": 0,
     "state": "victory",
     "strategy": "twin"
   },
   {
-    "breach_cost": 112,
-    "collected": 402,
-    "hp": 16.0,
-    "kill_rewards": 451,
-    "money": 40,
+    "breach_cost": 15,
+    "collected": 1001,
+    "hp": 90.0,
+    "kill_rewards": 1200,
+    "money": 726,
     "peak_entities": {
-      "coins": 12,
-      "enemies": 4,
+      "coins": 15,
+      "enemies": 5,
+      "shots": 27,
+      "vfx": 96
+    },
+    "purchases": [
+      "twin",
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate",
+      "rate"
+    ],
+    "seconds": 157.1,
+    "seed": 91,
+    "seizures": 0,
+    "state": "victory",
+    "strategy": "twin"
+  },
+  {
+    "breach_cost": 40,
+    "collected": 880,
+    "hp": 38.0,
+    "kill_rewards": 1205,
+    "money": 545,
+    "peak_entities": {
+      "coins": 15,
+      "enemies": 5,
       "shots": 14,
       "vfx": 96
     },
     "purchases": [
-      "twin",
+      "laser",
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate",
+      "rate"
+    ],
+    "seconds": 158.4,
+    "seed": 11,
+    "seizures": 0,
+    "state": "victory",
+    "strategy": "laser"
+  },
+  {
+    "breach_cost": 50,
+    "collected": 793,
+    "hp": 60.0,
+    "kill_rewards": 1075,
+    "money": 448,
+    "peak_entities": {
+      "coins": 15,
+      "enemies": 5,
+      "shots": 15,
+      "vfx": 96
+    },
+    "purchases": [
+      "laser",
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate",
+      "rate"
+    ],
+    "seconds": 158.4,
+    "seed": 42,
+    "seizures": 0,
+    "state": "victory",
+    "strategy": "laser"
+  },
+  {
+    "breach_cost": 33,
+    "collected": 998,
+    "hp": 38.0,
+    "kill_rewards": 1195,
+    "money": 670,
+    "peak_entities": {
+      "coins": 15,
+      "enemies": 5,
+      "shots": 15,
+      "vfx": 96
+    },
+    "purchases": [
+      "laser",
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate",
+      "rate"
+    ],
+    "seconds": 158.4,
+    "seed": 91,
+    "seizures": 0,
+    "state": "victory",
+    "strategy": "laser"
+  },
+  {
+    "breach_cost": 74,
+    "collected": 820,
+    "hp": 54.0,
+    "kill_rewards": 1020,
+    "money": 101,
+    "peak_entities": {
+      "coins": 15,
+      "enemies": 5,
+      "shots": 13,
+      "vfx": 96
+    },
+    "purchases": [
+      "damage",
+      "damage",
+      "rate",
+      "rate"
+    ],
+    "seconds": 161.3,
+    "seed": 11,
+    "seizures": 0,
+    "state": "victory",
+    "strategy": "bad_math"
+  },
+  {
+    "breach_cost": 41,
+    "collected": 828,
+    "hp": 68.0,
+    "kill_rewards": 1040,
+    "money": -3,
+    "peak_entities": {
+      "coins": 12,
+      "enemies": 5,
+      "shots": 14,
+      "vfx": 96
+    },
+    "purchases": [
       "damage",
       "damage",
       "rate",
       "rate",
       "rate"
     ],
-    "seconds": 98.8,
-    "seed": 91,
+    "seconds": 159.5,
+    "seed": 42,
     "seizures": 0,
     "state": "victory",
-    "strategy": "twin"
+    "strategy": "bad_math"
   },
   {
-    "breach_cost": 410,
-    "collected": 193,
-    "hp": 4.0,
-    "kill_rewards": 200,
-    "money": -37,
+    "breach_cost": 18,
+    "collected": 932,
+    "hp": 72.0,
+    "kill_rewards": 1180,
+    "money": 124,
     "peak_entities": {
-      "coins": 9,
-      "enemies": 6,
-      "shots": 9,
+      "coins": 15,
+      "enemies": 5,
+      "shots": 13,
       "vfx": 96
     },
     "purchases": [
-      "laser"
-    ],
-    "seconds": 113.1,
-    "seed": 11,
-    "seizures": 2,
-    "state": "victory",
-    "strategy": "laser"
-  },
-  {
-    "breach_cost": 242,
-    "collected": 223,
-    "hp": 16.0,
-    "kill_rewards": 269,
-    "money": -4,
-    "peak_entities": {
-      "coins": 9,
-      "enemies": 6,
-      "shots": 8,
-      "vfx": 96
-    },
-    "purchases": [
-      "laser",
       "damage",
-      "damage"
+      "damage",
+      "rate",
+      "rate",
+      "rate"
     ],
-    "seconds": 103.8,
-    "seed": 42,
-    "seizures": 0,
-    "state": "victory",
-    "strategy": "laser"
-  },
-  {
-    "breach_cost": 308,
-    "collected": 220,
-    "hp": 0.0,
-    "kill_rewards": 271,
-    "money": 27,
-    "peak_entities": {
-      "coins": 9,
-      "enemies": 5,
-      "shots": 7,
-      "vfx": 42
-    },
-    "purchases": [
-      "laser",
-      "damage"
-    ],
-    "seconds": 94.8,
+    "seconds": 160.4,
     "seed": 91,
     "seizures": 0,
-    "state": "game_over",
-    "strategy": "laser"
-  },
-  {
-    "breach_cost": 364,
-    "collected": 223,
-    "hp": 22.0,
-    "kill_rewards": 230,
-    "money": -321,
-    "peak_entities": {
-      "coins": 9,
-      "enemies": 5,
-      "shots": 7,
-      "vfx": 96
-    },
-    "purchases": [],
-    "seconds": 112.1,
-    "seed": 11,
-    "seizures": 6,
     "state": "victory",
     "strategy": "bad_math"
   },
   {
-    "breach_cost": 314,
-    "collected": 227,
-    "hp": 22.0,
-    "kill_rewards": 248,
-    "money": -267,
-    "peak_entities": {
-      "coins": 9,
-      "enemies": 6,
-      "shots": 7,
-      "vfx": 96
-    },
-    "purchases": [],
-    "seconds": 110.2,
-    "seed": 42,
-    "seizures": 3,
-    "state": "victory",
-    "strategy": "bad_math"
-  },
-  {
-    "breach_cost": 318,
-    "collected": 216,
-    "hp": 0.0,
-    "kill_rewards": 244,
-    "money": -282,
-    "peak_entities": {
-      "coins": 9,
-      "enemies": 5,
-      "shots": 7,
-      "vfx": 34
-    },
-    "purchases": [],
-    "seconds": 95.9,
-    "seed": 91,
-    "seizures": 3,
-    "state": "game_over",
-    "strategy": "bad_math"
-  },
-  {
-    "breach_cost": 412,
-    "collected": 76,
+    "breach_cost": 206,
+    "collected": 138,
     "hp": 62.0,
-    "kill_rewards": 202,
-    "money": 34,
+    "kill_rewards": 670,
+    "money": 47,
     "peak_entities": {
-      "coins": 9,
-      "enemies": 6,
-      "shots": 8,
+      "coins": 12,
+      "enemies": 5,
+      "shots": 14,
       "vfx": 96
     },
-    "purchases": [],
-    "seconds": 112.5,
+    "purchases": [
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate"
+    ],
+    "seconds": 160.5,
     "seed": 11,
     "seizures": 0,
     "state": "victory",
     "strategy": "losses"
   },
   {
-    "breach_cost": 356,
-    "collected": 67,
-    "hp": 76.0,
-    "kill_rewards": 203,
-    "money": 16,
+    "breach_cost": 192,
+    "collected": 134,
+    "hp": 34.0,
+    "kill_rewards": 700,
+    "money": 57,
     "peak_entities": {
-      "coins": 12,
-      "enemies": 6,
-      "shots": 7,
+      "coins": 15,
+      "enemies": 5,
+      "shots": 14,
       "vfx": 96
     },
     "purchases": [
-      "damage"
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate"
     ],
-    "seconds": 107.1,
+    "seconds": 160.3,
     "seed": 42,
     "seizures": 0,
     "state": "victory",
     "strategy": "losses"
   },
   {
-    "breach_cost": 432,
-    "collected": 72,
-    "hp": 66.0,
-    "kill_rewards": 193,
-    "money": -55,
+    "breach_cost": 192,
+    "collected": 137,
+    "hp": 100.0,
+    "kill_rewards": 690,
+    "money": 60,
     "peak_entities": {
-      "coins": 12,
+      "coins": 15,
       "enemies": 5,
-      "shots": 8,
+      "shots": 14,
       "vfx": 96
     },
     "purchases": [
-      "damage"
+      "damage",
+      "damage",
+      "rate",
+      "rate",
+      "rate"
     ],
-    "seconds": 111.0,
+    "seconds": 160.3,
     "seed": 91,
-    "seizures": 3,
+    "seizures": 0,
     "state": "victory",
     "strategy": "losses"
   }

@@ -14,14 +14,14 @@ var boss: Dictionary = {}
 func _init() -> void:
 	rng.randomize()
 
-func spawn(kind: int, x: float, z: float = -60.0) -> Dictionary:
+func spawn(kind: int, x: float, z: float = -115.0) -> Dictionary:
 	var stats: Dictionary = Rules.config.enemies[kind]
 	var visual := Art.enemy(kind)
 	add_child(visual)
 	visual.position = Vector3(x, 0, z)
 	next_id += 1
 	var enemy := {"id": next_id, "kind": kind, "pos": Vector2(x,z), "health": Health.new(stats.hp),
-		"radius": 0.48, "visual": visual, "attack_timer": rng.randf_range(1.2, 2.8),
+		"radius": 0.48, "visual": visual, "attack_timer": 0.12 if kind == 2 else rng.randf_range(1.2, 2.8),
 		"warning": false, "flash": 0.0, "boss": false, "rewarded": false}
 	enemies.append(enemy)
 	return enemy
@@ -49,7 +49,7 @@ func director(delta: float, seconds: float, gate_near: bool) -> void:
 	elif seconds >= 22 and roll < 0.33: kind = 1
 	if threat + float(Rules.config.enemies[kind].threat) > Rules.threat_budget(seconds): kind = 0
 	if enemies.size() >= int(Rules.config.enemy_cap) or threat >= Rules.threat_budget(seconds): return
-	spawn(kind, rng.randi_range(-2, 2) * float(Rules.config.lane_width))
+	spawn(kind, rng.randi_range(-2, 2) * float(Rules.config.lane_width), -float(Rules.config.enemy_spawn_distance))
 
 func tick(delta: float, seconds: float, player_x: float, gate_near: bool = false) -> void:
 	for enemy in enemies.duplicate():
@@ -69,7 +69,7 @@ func tick(delta: float, seconds: float, player_x: float, gate_near: bool = false
 			if enemy.pos.y > -4.2: boss_collision.emit()
 			continue
 		var stats: Dictionary = Rules.config.enemies[enemy.kind]
-		enemy.pos.y += (float(Rules.config.run_speed) + float(stats.speed)) * delta
+		enemy.pos.y += (Rules.run_speed(seconds) + float(stats.speed)) * delta
 		visual.position = Vector3(enemy.pos.x, absf(sin(seconds * 8 + enemy.id)) * 0.12, enemy.pos.y)
 		visual.rotation.z = sin(seconds * 8 + enemy.id) * 0.04
 		visual.get_node("FootL").rotation.x = sin(seconds * 8 + enemy.id) * 0.5
@@ -78,7 +78,7 @@ func tick(delta: float, seconds: float, player_x: float, gate_near: bool = false
 			breached.emit(int(stats.penalty))
 			remove(enemy)
 			continue
-		if enemy.pos.y > -34 and enemy.pos.y < -3:
+		if (enemy.kind == 2 or enemy.pos.y > -45) and enemy.pos.y < -3:
 			enemy.attack_timer -= delta * (0.65 if gate_near else 1.0)
 			if enemy.attack_timer < 0.65:
 				enemy.warning = true

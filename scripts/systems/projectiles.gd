@@ -58,7 +58,7 @@ func tick(delta: float, player_x: float) -> void:
 			impact.emit(visual.position, Color("f87959"))
 			remove(shot)
 			removed = true
-		if not removed and (shot.age > float(Rules.config.rocket_lifetime) or absf(shot.pos.x) > 16 or shot.pos.y < -80 or shot.pos.y > 12):
+		if not removed and (shot.age > float(Rules.config.rocket_lifetime) or absf(shot.pos.x) > 16 or shot.pos.y < -float(Rules.config.enemy_spawn_distance)-20.0 or shot.pos.y > 12):
 			remove(shot)
 
 func remove(shot: Dictionary) -> void:

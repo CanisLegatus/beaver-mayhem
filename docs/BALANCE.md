@@ -1,11 +1,36 @@
-# Balance — 0.1.0
+# Balance — 0.2.0
 
-All source numbers come from `config/balance.json`. Analytic DPS assumes perfect
-alignment and accuracy; simulations below use actual actors/projectiles and a bot.
+Runtime source: `config/balance.json`. All ten chapters currently use this same
+ruleset; only campaign unlock/selection persists. Cash and upgrades reset each run.
 
-## Weapons and bounded progression
+## Tempo and economy
 
-| Weapon | Damage × count | Interval | Base DPS (sustained) | Max sustained DPS |
+Run: 150 seconds before the boss. Forward speed ramps from 10
+to 15 m/s; lateral speed is 8 m/s (one lane in 0.25 s).
+Integrated road distance to boss: 1875 m. Enemy spawn distance: 115 m, hidden
+in horizon haze rather than born near the camera. Gate approach distance is
+computed by integrating the next seven seconds of speed, growing 70.8–105 m.
+
+| Enemy | HP | Reward | Breach penalty | Attack interval |
+|---|---:|---:|---:|---:|
+| LUMBERJACK | 24 | $10 | $5 | 3.5 s |
+| ENGINEER | 55 | $25 | $10 | 1.8 s |
+| ELON | 120 | $55 | $18 | 3.2 s |
+
+The elite primes its first rocket at 0.12 s after spawning, including at the
+horizon. Later attacks repeat every 3.2 s; guidance remains limited and locks
+after 1.65 s. Rockets have twelve seconds of life to cover the longer approach.
+
+Start cash $40; weapon configurations total $575.
+Damage costs [65, 100, 155, 230] ($550 total);
+rate costs [60, 95, 145, 220] ($520 total). Full arsenal and
+upgrades cost $1645. Eight gate groups spawn at 14/31/49/67/85/103/121/139 s.
+Answering all correctly awards $540. Breaches are deliberately more forgiving
+than v0.1; physical pickup and meaningful debt/seizure rules remain unchanged.
+
+## Weapons
+
+| Weapon | Damage × count | Interval | Base sustained DPS | Max sustained DPS |
 |---|---:|---:|---:|---:|
 | log | 12 × 1 | 0.4 s | 30.00 | 86.40 |
 | fan | 6.5 × 3 | 0.48 s | 40.62 | 117.00 |
@@ -13,68 +38,42 @@ alignment and accuracy; simulations below use actual actors/projectiles and a bo
 | twin | 7.5 × 2 | 0.42 s | 35.71 | 102.86 |
 | laser | 6 × 1 | 0.1 s | 31.43 | 90.51 |
 
-Damage scales as `1 + 0.20 × level`; rate as `1 + 0.15 × level`.
-Four levels each give **2.88×** maximum DPS, without exponential stacking.
-Fan DPS sums all three directions; a small distant target usually intersects only
-one log (13.54 base DPS). Twin streams trade reduced per-projectile damage for
-coverage; a target can sit between streams. Heavy can hit three targets, but
-never hits one target repeatedly with the same shot. Laser burst DPS is 60,
-then ~2.2 s firing / ~2 s cooling; switching does not reset heat.
+Damage factor `1 + .20 × level`, rate factor `1 + .15 × level`, cap four
+levels each: maximum power is 2.88×. Values assume perfect physical hits.
+For illustrative 60% accuracy, effective DPS is 0.6 times the table. Fan
+sums three directions; a small single target generally catches only one.
+Heavy penetrates three unique targets. Twin offsets are ±0.5 m. Laser burst
+is 60 DPS, followed by forced cooling; switching preserves heat.
 
-An illustrative 60% hit rate gives `0.6 × sustained DPS`, before target
-penetration or fan coverage. Against 24/55/120 HP, base logs need 2/5/10
-hits: 0.4/1.6/3.6 s from the first impact, plus projectile travel. Base ideal
-boss fire takes ~20 s; maximum logs ~6.94 s. Actual player positioning,
-enemy survivors, travel time, heat and wasted shots extend those estimates.
+Base log hits to kill 24/55/120 HP: 2/5/10 hits (0.4/1.6/3.6 s after first
+impact, plus travel). Boss HP 600, collision deadline ~25 s. Theoretical
+perfect base log boss damage time ~20 s, maximum logs ~6.94 s; misses,
+survivors and projectile travel extend actual fights.
 
-## Economy and difficulty
+## Full-scene simulations
 
-Start cash: $40. All weapon configurations cost $575 together.
-Damage levels: [65, 100, 155, 230], total $550.
-Rate levels: [60, 95, 145, 220], total $520.
-Full arsenal plus all levels costs **$1645**.
-Six correct gates award $330. No income is added for a missed coin. A ten-second
-continuous debt period seizes one eligible asset, without extra cash penalties.
-The protected base weapon and later math rewards allow recovery; negative cash
-does not directly cause game over. The bot can still win while in debt.
-
-Threat budget increases linearly 4 → 16 over 90 s, with costs 1/3/7. Spawning
-interval decreases 2.4 → 1.35 s; enemy HP stays fixed. Gate windows soften
-attacks and spawning. Boss HP is 600 and collision deadline ~25 s.
-
-## Deterministic full-scene simulations
-
-Three seeds (11, 42, 91), nine purchase/input strategies, 27 complete attempts.
-The bot tracks nearby enemies/loot, reserves answer lanes shortly before gates,
-and makes simple local projectile dodges. No HP, money or damage cheats are used.
-The losses strategy intentionally wanders; bad_math chooses incorrect answers.
-These are development probes, **not human win rates**. Strategies can diverge
-after small frame-order/input changes, so compare the checked-in raw results.
+Nine strategies × three seeds (11/42/91). Actual game/projectiles/economy,
+no granted money or HP, automated steering only. This is not a human win rate.
+Bad-math chooses incorrect answers; losses wanders and misses pickups.
 
 | Strategy | Wins / 3 | Winning boss phase range | Final cash range |
 |---|---:|---:|---:|
-| base | 3 | 20.2–22.9 s | $172 to $360 |
-| damage | 3 | 10.0–14.7 s | $32 to $116 |
-| rate | 3 | 10.1–13.5 s | $39 to $75 |
-| fan | 3 | 13.0–15.1 s | $2 to $82 |
-| heavy | 3 | 7.5–11.0 s | $60 to $75 |
-| twin | 2 | 8.8–11.4 s | $1 to $45 |
-| laser | 2 | 13.8–23.1 s | $-37 to $27 |
-| bad_math | 2 | 20.2–22.1 s | $-321 to $-267 |
-| losses | 3 | 17.1–22.5 s | $-55 to $34 |
+| base | 2 | 19.8–20.2 s | $1097 to $1354 |
+| damage | 2 | 8.9–9.3 s | $808 to $845 |
+| rate | 1 | 8.3–8.3 s | $733 to $893 |
+| fan | 3 | 11.0–11.3 s | $597 to $698 |
+| heavy | 3 | 6.5–6.6 s | $661 to $714 |
+| twin | 3 | 7.1–7.7 s | $651 to $726 |
+| laser | 3 | 8.4–8.4 s | $448 to $670 |
+| bad_math | 3 | 9.5–11.3 s | $-3 to $124 |
+| losses | 3 | 10.3–10.5 s | $47 to $60 |
 
-Prepared damage/rate/heavy builds generally defeat the boss in about 8–15 s.
-Base and poorly funded laser builds face the deadline. Some bot runs lose; full
-purchases are unaffordable within observed earnings. Kill rewards are potential
-cash until collected; breach losses and misses materially affect purchasing.
+Collected kill cash: $134–$1033;
+potential dropped cash: $670–$1300;
+breach costs: $0–$206.
+Extra time and higher rewards make this version intentionally more generous.
+These bot strategies optimize one configuration; they do not prove a player
+can or cannot buy the whole shop. Phone play remains necessary for final tuning.
 
-Observed collected-kill cash: $67–$402;
-kill reward potential: $193–$467;
-breach charges: $90–$432.
-The $550–700 income target is an early hypothesis, not a guaranteed reward budget:
-good math plus successful pickups can exceed it; poor play earns much less.
-Future tuning should use real touch play, accuracy and player telemetry recorded
-locally with consent, rather than optimizing only for this bot.
-
-[Raw simulation data](simulation-results.json). Regenerate with `./tools/check.sh`
-then `python3 tools/report_balance.py`.
+[Raw data](simulation-results.json). Regenerate: `./tools/check.sh` then
+`python3 tools/report_balance.py`.
