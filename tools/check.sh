@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+GODOT_BIN="${GODOT_BIN:-$HOME/.local/bin/godot}"
+mkdir -p builds
+"$GODOT_BIN" --headless --editor --import --quit 2>&1 | tee builds/import.log
+if rg -q 'SCRIPT ERROR|ERROR:' builds/import.log; then exit 1; fi
+"$GODOT_BIN" --headless --script res://tests/run_tests.gd 2>&1 | tee builds/tests.log
+if rg -q 'SCRIPT ERROR|ERROR:|FAIL:' builds/tests.log; then exit 1; fi
