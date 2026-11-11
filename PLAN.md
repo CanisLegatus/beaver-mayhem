@@ -16,7 +16,7 @@ Real-device testing remains unverified and tracked in [issue #1](https://github.
 - [x] Saved ten-level roadmap, gated unlocks, first-level family/dam cinematic and camera orbit.
 - [x] Updated tests, visual captures, balance reports, Android APK and release.
 
-Current delivery: [v0.2.0](https://github.com/CanisLegatus/beaver-mayhem/releases/tag/v0.2.0).
+Previous delivery: [v0.2.0](https://github.com/CanisLegatus/beaver-mayhem/releases/tag/v0.2.0).
 Uploaded APK SHA256 matches the locally verified build; real-device acceptance remains issue #1.
 
 ## v0.3 — distinct worlds and action bosses
@@ -25,4 +25,7 @@ Uploaded APK SHA256 matches the locally verified build; real-device acceptance r
 - [x] Faster arcing rockets, denser combat, trucks and comet/shard hazards.
 - [x] Chapter-two falling moon cinematic, four zombie types and horde director.
 - [x] Attack-driven dozer and titan/tree/house attacks with fair QTE cinematics.
-- [ ] Licensed action soundtrack/voices, tests, visual review and signed APK release.
+- [x] Licensed action soundtrack/voices, tests, visual review and signed APK release.
+
+Current delivery: [v0.3.0](https://github.com/CanisLegatus/beaver-mayhem/releases/tag/v0.3.0).
+Published APK digest matches the local verified build. Hardware acceptance remains issue #1.
