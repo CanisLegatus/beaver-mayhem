@@ -46,4 +46,6 @@ runner or a live-service game. There are no ads, accounts or online requirements
 
 [Design](docs/GDD.md) · [Architecture](docs/ARCHITECTURE.md) ·
 [Balance](docs/BALANCE.md) · [Testing](docs/TESTING.md) ·
-[Decisions](docs/DECISIONS.md) · [Plan](PLAN.md) · [MIT license](LICENSE)
+[Decisions](docs/DECISIONS.md) · [Итоговый отчёт](docs/DELIVERY.md) · [Plan](PLAN.md) · [MIT license](LICENSE)
+
+Godot Engine is MIT licensed; see the [Godot license and third-party notices](https://godotengine.org/license/).
