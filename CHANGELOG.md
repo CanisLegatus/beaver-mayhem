@@ -1,4 +1,13 @@
 # Changelog
+## 0.3.0 — 2026-11-12
+- Correct inside-out custom mesh winding and remove road texture/z-fighting artifacts.
+- Add stable PBR asphalt/ground, chapter rain/storm/snow/cold sets and lightning.
+- Add warned traffic, comets and falling shards; faster arcing lit rockets and denser combat.
+- Add Moonfall opening, four zombie variants and capped hordes for chapter two.
+- Replace passive dozer with attack phases; add tree/house-throwing Titan and QTE camera dodges.
+- Add licensed Kevin MacLeod score, recorded voices, rain/thunder and offline credits.
+- Extend geometry/hazard/QTE tests, full boss-fight fixtures and both-chapter simulations.
+
 ## 0.2.0 — 2026-11-12
 - Horizon spawns, seven-second gate preview and a 150-second run accelerating 10 → 15 m/s.
 - Faster steering, lower breach costs, higher rewards and early/frequent elite rockets.

@@ -19,4 +19,9 @@ with zipfile.ZipFile(apk) as z:
     assert not any('armeabi-v7a/' in n or 'x86/' in n or 'x86_64/' in n for n in names)
     assert any(n.startswith('assets/') and ('main.gd' in n or n.endswith('.pck')) for n in names)
     assert not any(n.endswith(('.keystore', '.jks')) for n in names)
+    credits = z.read('assets/assets/licenses/CREDITS.txt').decode('utf-8')
+    assert 'Kevin MacLeod' in credits and 'Attribution 4.0' in credits
+    for asset in ['hitman.ogg', 'descent.ogg', 'volatile.ogg', 'moon.jpg']:
+        assert any(asset in name for name in names), asset
+
 print('APK structure PASS: unique providers, launcher, offline, ARM64, packaged game, no signing keys.')

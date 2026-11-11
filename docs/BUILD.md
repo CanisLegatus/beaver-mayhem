@@ -42,7 +42,7 @@ may vary because of ZIP timestamps/debug signing; the process and source are pin
 not claimed bit-for-bit reproducible across machines.
 
 Output: `builds/beaver-mayhem-debug.apk` (ARM64, package
-`org.canislegatus.beavermayhem`, version 0.2.0/code 2). Prebuilt template minimum
+`org.canislegatus.beavermayhem`, version 0.3.0/code 3). Prebuilt template minimum
 Android API 24; target API 36; OpenGL ES 3.0; portrait; no Internet permission.
 
 ```sh

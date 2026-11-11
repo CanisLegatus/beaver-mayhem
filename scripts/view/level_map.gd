@@ -6,6 +6,7 @@ var root: Control
 var scroll: ScrollContainer
 var content: Control
 var campaign: Progression
+var credits_panel: PanelContainer
 var card_buttons: Array[Button] = []
 var points := PackedVector2Array()
 
@@ -65,6 +66,35 @@ func _ready() -> void:
 	sound.size = Vector2(42,42)
 	sound.pressed.connect(sound_requested.emit)
 	root.add_child(sound)
+	var info := Button.new()
+	info.name = "CreditsButton"
+	info.text = "i"
+	info.position = Vector2(330,27)
+	info.size = Vector2(40,42)
+	info.pressed.connect(func() -> void: credits_panel.show())
+	root.add_child(info)
+	credits_panel = PanelContainer.new()
+	credits_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	credits_panel.offset_left = 16
+	credits_panel.offset_right = -16
+	credits_panel.offset_top = 90
+	credits_panel.offset_bottom = -30
+	root.add_child(credits_panel)
+	var credit_column := VBoxContainer.new()
+	credits_panel.add_child(credit_column)
+	var close := Button.new()
+	close.name = "CloseCredits"
+	close.text = "CLOSE CREDITS"
+	close.custom_minimum_size.y = 48
+	close.pressed.connect(credits_panel.hide)
+	credit_column.add_child(close)
+	var credit_text := RichTextLabel.new()
+	credit_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	credit_text.custom_minimum_size = Vector2(360,0)
+	credit_text.text = FileAccess.get_file_as_string("res://assets/licenses/CREDITS.txt")
+	credit_text.add_theme_font_size_override("normal_font_size",16)
+	credit_column.add_child(credit_text)
+	credits_panel.hide()
 	var footer := Label.new()
 	footer.position = Vector2(20,2280)
 	footer.text = "DRAG THE MAP TO EXPLORE  •  PROGRESS SAVES LOCALLY"
@@ -111,7 +141,7 @@ func build_card(level: int, center: Vector2) -> void:
 	card.add_theme_stylebox_override("disabled",locked)
 	content.add_child(card)
 	var preview := TextureRect.new()
-	preview.texture = load("res://assets/images/level-preview.png") if ResourceLoader.exists("res://assets/images/level-preview.png") else load("res://assets/images/beaver-icon.png")
+	preview.texture = load("res://assets/images/moonfall-preview.png") if level == 2 and ResourceLoader.exists("res://assets/images/moonfall-preview.png") else load("res://assets/images/level-preview.png")
 	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	preview.position = Vector2(8,8)
@@ -122,7 +152,7 @@ func build_card(level: int, center: Vector2) -> void:
 	var caption := Label.new()
 	caption.name = "Caption"
 	caption.position = Vector2(12,93)
-	caption.add_theme_font_size_override("font_size",15)
+	caption.add_theme_font_size_override("font_size",14)
 	caption.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.add_child(caption)
 	card_buttons.append(card)
@@ -133,7 +163,7 @@ func show_campaign(value: Progression) -> void:
 	for i in range(10):
 		var button := card_buttons[i]
 		button.disabled = i+1 > campaign.unlocked
-		button.get_node("Caption").text = "CHAPTER %02d   %s" % [i+1, "LOCKED" if button.disabled else ("✓" if i+1 < campaign.unlocked else "PLAY →")]
+		button.get_node("Caption").text = ("MOONFALL " if i == 1 else "CHAPTER %02d " % (i+1)) + "%s" % [ "LOCKED" if button.disabled else ("✓" if i+1 < campaign.unlocked else "PLAY →")]
 		button.modulate = Color(0.48,0.57,0.65) if button.disabled else Color.WHITE
 	content.queue_redraw()
 	await get_tree().process_frame

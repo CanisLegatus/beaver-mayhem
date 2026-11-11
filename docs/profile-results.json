@@ -1,10 +1,23 @@
 {
-  "average_draw_calls": 510.766666666667,
-  "max_frame_ms": 18.336,
-  "mean_frame_ms": 16.6637883333333,
-  "note": "Graphical fixture with 12 initial enemies, fan and gate; HP raised to avoid ending profiling. Not Android or a human run.",
-  "p95_frame_ms": 17.367,
-  "platform": "Linux x86_64 AMD Lucienne Mesa 26.2.6, Compatibility",
-  "samples": 600,
+  "fixtures": [
+    {
+      "chapter": 1,
+      "max_frame_ms": 17.678,
+      "mean_draw_calls": 740.02,
+      "mean_frame_ms": 16.6652,
+      "p95_frame_ms": 17.225,
+      "samples": 300
+    },
+    {
+      "chapter": 2,
+      "max_frame_ms": 17.791,
+      "mean_draw_calls": 1577.55,
+      "mean_frame_ms": 16.66559,
+      "p95_frame_ms": 17.389,
+      "samples": 300
+    }
+  ],
+  "note": "Dense fixtures: 16 human enemies or 64 zombies plus storm, real rendering. Test-only HP avoids early exit. Not Android performance.",
+  "platform": "Linux AMD Lucienne / Mesa / Compatibility",
   "viewport": "432x864"
 }

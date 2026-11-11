@@ -245,15 +245,15 @@ func test_runtime() -> void:
 	var boss: Dictionary = game.enemies.boss
 	game.projectiles.spawn("log",Vector3(0,1,boss.pos.y+2),Vector2(0,-38),12,true)
 	game.projectiles.tick(0.1,0)
-	check(boss.health.hp == 588 and not boss.health.dead, "boss takes real nonlethal damage")
+	check(boss.health.hp == float(Rules.config.bosses.dozer.hp)-12 and not boss.health.dead, "boss takes real nonlethal damage")
 	boss.pos.y = -4
 	game.enemies.tick(0,91,0)
-	check(game.state == "game_over", "boss contact ends run")
+	check(game.state == "playing", "boss no longer passively collides")
 	game.start_run()
 	game.enemies.spawn_boss()
 	boss = game.enemies.boss
 	# Simulate physical volleys, no direct health manipulation.
-	for i in range(50):
+	for i in range(ceili(float(Rules.config.bosses.dozer.hp)/12)):
 		game.projectiles.spawn("log",Vector3(0,1,boss.pos.y+2),Vector2(0,-38),12,true)
 		game.projectiles.tick(0.1,0)
 	game.enemies.tick(0,100,0)
@@ -309,7 +309,7 @@ func test_runtime() -> void:
 	check(game.projectiles.shots.size() >= 2, "elite repeats rocket in 3.2 seconds")
 	game.world.set_time(0)
 	var daylight := game.world.sun.light_energy
-	game.world.set_time(55)
+	game.world.set_time(110)
 	check(game.world.night_amount > 0.9 and game.world.sun.light_energy < daylight and game.world.moon.light_energy > 0, "day-night lighting changes")
 	game.show_map()
 	check(game.state == "menu" and game.level_map.root.visible and not game.hud.root.visible, "return to map stops run")

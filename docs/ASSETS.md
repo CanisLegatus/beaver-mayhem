@@ -1,8 +1,9 @@
-# Asset sources — v0.2.0
+# Asset sources — v0.3.0
 
-All downloaded assets below are free to redistribute and use in this game under
-CC0 1.0. They are not covered by the repository's software-only MIT declaration.
-No paid assets or attribution-only / non-commercial restrictions are used.
+Downloaded assets use CC0 or CC BY 4.0 and are free to redistribute under those
+terms. They are not relicensed under the software MIT license. Required attribution
+is included in assets/licenses/CREDITS.txt, shipped in the APK and accessible from
+the roadmap i button. No non-commercial-only or paid assets are used.
 
 | Local asset | Creator / work | Source | License / processing |
 |---|---|---|---|
@@ -32,3 +33,30 @@ profiles, clothing details and procedural fur/cloth shading. They are three-dime
 semi-realistic game models, not photographs or scanned human assets. Vegetation,
 road, dam and bulldozer are original procedural geometry. No external character
 likeness assets are downloaded. Level preview is captured from the game renderer.
+
+## v0.3 additions
+| Asset | Creator / source | License / processing |
+|---|---|---|
+| hitman.ogg, descent.ogg, volatile.ogg | Kevin MacLeod / https://incompetech.com/music/royalty-free/ | CC BY 4.0; original catalog metadata saved in music-catalog.json; normalized toward -18 LUFS/-2 dBTP, Vorbis transcoding, loop/volume mixing |
+| voice-*.ogg | Kenney / https://opengameart.org/content/voiceover-pack-40-lines | CC0; selected recorded male warning, ready, go, final-round and mission-result lines |
+| rocket-engine.ogg, energy.ogg | Kenney Sci-Fi Sounds / https://kenney.nl/assets/sci-fi-sounds | CC0; spaceEngineLarge_001 and forceField_000, retrieved through Mcamento8/open-game-sfx-index mirror |
+| zombie.ogg | artisticdude / https://opengameart.org/content/zombies-sound-pack | CC0; zombie-1 WAV transcoded to Vorbis, same verified mirror |
+| rain.ogg | Ylmir / https://opengameart.org/content/rain-loopable | CC0; first OGG from original pack, looped |
+| storm-ambience.ogg, thunder.ogg | kindland / https://opengameart.org/node/22231 | CC0; original ambience loop plus a faded 4.2-second thunder excerpt at 256.8 s |
+| asphalt-*.jpg | ambientCG / https://ambientcg.com/view?id=Asphalt002 | CC0; original 1K JPG color/NormalGL/roughness maps |
+| ground-*.jpg | ambientCG / https://ambientcg.com/view?id=Ground037 | CC0; original 1K JPG color/NormalGL maps |
+| moon.jpg | Solar System Scope / INOVE / https://www.solarsystemscope.com/textures/ | CC BY 4.0; original 2K Moon map applied to sphere |
+
+Kevin MacLeod official catalog identifies Volatile Reaction (155 BPM, ISRC
+USUAN1400039), Hitman (76 BPM, USUAN1300013), and The Descent (103 BPM,
+USUAN1200094). They were selected as driving action/horror compositions from a
+well-known free-music composer; no unsupported popularity ranking is claimed.
+Source downloads: incompetech.com/music/royalty-free/mp3-royaltyfree/ followed by
+the URL-encoded catalog filename. Current official licensing/credit generator:
+https://incompetech.com/music/royalty-free/licenses/
+
+The three music cues are selected for level one, Moonfall and boss fights, rather
+than played simultaneously. A dedicated recorded-speech player ducks music; rain
+has a separate quiet ambience player. Synthetic short utility cues remain where
+appropriate. The named zombie/human/vehicle/house meshes are original procedural
+3D work; no paid character likeness models were imported.

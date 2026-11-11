@@ -1,5 +1,6 @@
 class_name GameHUD
 extends CanvasLayer
+signal qte_pressed(direction: int)
 signal map_requested
 signal next_requested
 signal skip_requested
@@ -11,6 +12,10 @@ signal purchase_requested(item: String)
 signal cycle_requested
 var top_panel: Control
 var bottom_panel: Control
+var qte_panel: VBoxContainer
+var qte_label: Label
+var qte_meter: ProgressBar
+var cold_border: ColorRect
 var root: Control
 var hp_label: Label
 var money_label: Label
@@ -152,6 +157,43 @@ func _ready() -> void:
 	cinematic_caption.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 	cinematic_caption.offset_top = 65
 	root.add_child(cinematic_caption)
+	qte_panel = VBoxContainer.new()
+	qte_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	qte_panel.offset_left = -195
+	qte_panel.offset_right = 195
+	qte_panel.offset_top = 50
+	qte_panel.offset_bottom = 245
+	root.add_child(qte_panel)
+	qte_label = make_label("",25,Art.GOLD)
+	qte_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	qte_panel.add_child(qte_label)
+	qte_meter = ProgressBar.new()
+	qte_meter.max_value = 1.6
+	qte_meter.show_percentage = false
+	qte_panel.add_child(qte_meter)
+	var choices := HBoxContainer.new()
+	qte_panel.add_child(choices)
+	for i in range(3):
+		var index := i
+		var button := make_button(["← LEFT","↓ DUCK","RIGHT →"][i],func() -> void: qte_pressed.emit(index))
+		button.custom_minimum_size = Vector2(126,78)
+		choices.add_child(button)
+	qte_panel.hide()
+	cold_border = ColorRect.new()
+	cold_border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	cold_border.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var frost_shader := Shader.new()
+	frost_shader.code = """shader_type canvas_item;
+uniform float strength = 0.0;
+void fragment(){
+ float edge = smoothstep(0.34,0.5,abs(UV.x-0.5))+smoothstep(0.42,0.5,abs(UV.y-0.5));
+ float grain = 0.7+0.3*sin(UV.x*170.0+sin(UV.y*130.0)*3.0);
+ COLOR = vec4(vec3(0.65,0.83,0.95),min(edge,1.0)*strength*0.4*grain);
+}"""
+	var frost_mat := ShaderMaterial.new()
+	frost_mat.shader = frost_shader
+	cold_border.material = frost_mat
+	root.add_child(cold_border)
 	build_overlay()
 	apply_safe_area()
 	get_viewport().size_changed.connect(apply_safe_area)
@@ -217,9 +259,10 @@ func build_overlay() -> void:
 
 func set_state(value: String) -> void:
 	state = value
-	top_panel.visible = value != "cinematic"
-	bottom_panel.visible = value != "cinematic"
-	overlay.visible = value not in ["playing","cinematic"]
+	qte_panel.visible = value == "qte"
+	top_panel.visible = value not in ["cinematic","dodge_movie"]
+	bottom_panel.visible = value not in ["cinematic","dodge_movie"]
+	overlay.visible = value not in ["playing","cinematic","qte","dodge_movie"]
 	skip_button.visible = value == "cinematic"
 	cinematic_caption.visible = value == "cinematic"
 	play_button.visible = value in ["menu", "paused","victory"]
@@ -258,8 +301,9 @@ func refresh(health: Health, economy: Economy, seconds: float, boss: Dictionary,
 	weapon_button.text = economy.active.to_upper() + "\n↻"
 	weapon_button.disabled = state != "playing"
 	boss_bar.visible = not boss.is_empty() and not boss.health.dead
-	boss_label.text = "DEFORESTATOR  /  %d HP" % ceili(boss.health.hp) if boss_bar.visible else ""
+	boss_label.text = "%s / %d HP" % [boss.get("name","BOSS"),ceili(boss.health.hp)] if boss_bar.visible else ""
 	if boss_bar.visible:
+		boss_label.add_theme_font_size_override("font_size",17 if boss.get("name","").length()>15 else 20)
 		boss_bar.max_value = boss.health.maximum
 		boss_bar.value = boss.health.hp
 	heat_label.text = ("OVERHEATED • COOLING" if combat.overheated else "LASER HEAT %d%%" % int(combat.heat * 100)) if economy.active == "laser" else "DRAG TO DODGE • SHOOT AUTOMATICALLY"
@@ -291,3 +335,12 @@ func show_math(groups: Array[Dictionary], seconds: float = 0.0) -> void:
 	if group.used: return
 	var problem: Dictionary = group.problem
 	math_preview.text = problem.expression + "   [%.1fs]" % maxf(0.0, -group.z / Rules.run_speed(seconds)) + "\n" + "  %s   /   %s   /   %s" % problem.choices
+
+func set_qte(show: bool, direction: int, remaining: float) -> void:
+	qte_panel.visible = show
+	if show:
+		qte_label.text = ["DODGE LEFT!  [A / Q]","DUCK NOW!  [SPACE]","DODGE RIGHT!  [D / E]"][clampi(direction,0,2)]
+		qte_meter.value = remaining
+
+func set_weather(cold: float) -> void:
+	cold_border.material.set_shader_parameter("strength",clampf(cold,0,1))

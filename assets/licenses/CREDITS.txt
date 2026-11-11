@@ -1,0 +1,50 @@
+BEAVER MAYHEM — MUSIC & ASSET CREDITS
+
+Volatile Reaction — Kevin MacLeod (incompetech.com)
+ISRC USUAN1400039
+Licensed under Creative Commons Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+Source: https://incompetech.com/music/royalty-free/
+Changes: MP3 loudness-normalized to -18 LUFS / -2 dBTP target, transcoded to Ogg Vorbis, looped and mixed.
+
+Hitman — Kevin MacLeod (incompetech.com)
+ISRC USUAN1300013
+Licensed under Creative Commons Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+Source: https://incompetech.com/music/royalty-free/
+Changes: MP3 loudness-normalized to -18 LUFS / -2 dBTP target, transcoded to Ogg Vorbis, looped and mixed.
+
+The Descent — Kevin MacLeod (incompetech.com)
+ISRC USUAN1200094
+Licensed under Creative Commons Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+Source: https://incompetech.com/music/royalty-free/
+Changes: MP3 loudness-normalized to -18 LUFS / -2 dBTP target, transcoded to Ogg Vorbis, looped and mixed.
+
+Prepare to Fight — Basil (CC0), opengameart.org/content/prepare-to-fight
+
+Voiceover Pack / Sci-Fi Sounds / RPG Sounds / Particle Pack — Kenney (CC0), kenney.nl
+
+Zombie sound — artisticdude (CC0), opengameart.org/content/zombies-sound-pack
+
+Muffled Distant Explosion — NenadSimic (CC0), opengameart.org/content/muffled-distant-explosion
+
+Asphalt002 PBR — ambientCG / Lennart Demes (CC0), ambientcg.com/view?id=Asphalt002
+
+Original meshes and code: CanisLegatus, MIT. Godot Engine: MIT, godotengine.org/license
+
+Moon texture — Solar System Scope / INOVE
+https://www.solarsystemscope.com/textures/
+Creative Commons Attribution 4.0 — https://creativecommons.org/licenses/by/4.0/
+Original 2K Moon color map, mapped onto the cinematic sphere; no image edits.
+
+Ground037 PBR — ambientCG / Lennart Demes (CC0)
+https://ambientcg.com/view?id=Ground037
+
+Rain (loopable) — Ylmir (CC0)
+https://opengameart.org/content/rain-loopable
+
+Rain and thunders — kindland (CC0)
+https://opengameart.org/node/22231
+A 4.2-second thunder excerpt was cut and faded from the original recording;
+the complete storm ambience is also looped quietly in chapter two.

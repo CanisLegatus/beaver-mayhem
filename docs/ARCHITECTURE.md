@@ -25,7 +25,7 @@ created procedurally. Global class names are imported by Godot before CLI tests.
 | view/world.gd | sky, light, scenery, road chunks and static MultiMesh batching |
 | view/hud.gd | responsive UI, safe-area offsets, live shop and screen states |
 | view/effects.gd | capped short-lived mesh debris/sparks |
-| view/audio.gd | CC0 samples/music plus PCM cues, eight SFX voices + one music voice |
+| view/audio.gd | licensed samples/score, eight SFX + speech/music/ambience players |
 | main.gd | signal wiring, run states and ordered simulation |
 
 ## Signals and data
@@ -53,8 +53,8 @@ configured speeds. Pause/result screens do not advance simulation clocks.
 
 ## Bounded resources and reset
 Seven road chunks wrap rather than allocate indefinitely. Shared mesh/material
-caches and scenery MultiMeshes reduce allocation and draw calls. Caps: 22 ordinary
-enemies (+boss), 160 projectiles, 90 coin objects (a drop may add up to two over the
+caches and scenery MultiMeshes reduce allocation and draw calls. Caps: 32 human or 64 zombie ordinary
+enemies (+boss), 220 projectiles, 90 coin objects (a drop may add up to two over the
 threshold), 96 particles and eight audio voices. Off-road/old shots and passed
 loot/gates expire. There is no unbounded enemy HP scaling.
 
@@ -67,7 +67,8 @@ explicitly. Audio voices stop and release streams when leaving the scene tree.
 Progression loads user://progress.cfg and validates/clamps chapter numbers. Only
 completing an unlocked chapter advances the unlocked boundary. Saves write a temp
 file then atomically rename. Tests use separate save paths and never modify the
-player campaign. Ten chapters share the same configuration and reset all run assets.
+player campaign. The first two chapters have distinct encounters; later slots share forest combat
+with climate variants. All reset run assets.
 
 The map owns a CanvasLayer and disables 3D rendering behind its opaque UI. Chapter
 one enters the cinematic state; it advances only story/camera time. The family is
@@ -78,7 +79,25 @@ story camera transform exactly matches the gameplay camera.
 Rules.run_speed(seconds) is the single speed curve; player distance, terrain,
 enemies, coins and gates use it. Gate preview distance integrates future speed
 rather than multiplying a fixed value. Boss approach remains a separate relative
-speed. Night/day updates sky, fog, sun, moon and ambient fill. Character static
+speed. Night/day updates sky, fog, sun, moon and ambient fill without swapping textures. Character static
 geometry is merged by material; feet remain separate animation pivots. Far trees
 and chunk scenery use MultiMesh. Additive particle materials disable fog so black
 texture backgrounds do not produce bright rectangular fog artifacts.
+
+## v0.3 additions
+- LevelProfile defines fixed chapter climates and the chapter-two zombie mode.
+- WeatherFX uses bounded MultiMesh precipitation, real light flashes/bolt geometry,
+  smooth fog and wet/snow material uniforms. PBR roads share a material and stable
+  repeated UVs. Reverse-view pavement sits lower to avoid coplanar z-fighting.
+- Sculpt ring triangles use Godot clockwise outward winding. Body shaders remain
+  opaque with depth writes; there is no transparency workaround hiding bad topology.
+- EnemySystem has a separate weighted horde director, zombie contact guards and
+  spitter attacks. Up to 64 regular zombies plus the boss can coexist.
+- HazardSystem owns announced swept traffic, comet/shards and lane strikes. BossCombat
+  schedules attacks through that system; dozers hold position outside explicit rams.
+- DodgeQTE owns deadline/input/once-only resolution. ActionCamera owns Moonfall,
+  incoming props and three dodge camera paths. Playing, QTE, dodge movie, story and
+  paused states explicitly control which clocks advance; pausing preserves the
+  interrupted state. All temporary props/hazards/QTE state clear on restart.
+- Audio owns eight SFX voices, one recorded-speech voice, music and ambience.
+  Music ducks under speech; source/license credits are readable offline from the map.

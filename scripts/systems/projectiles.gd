@@ -27,12 +27,14 @@ func tick(delta: float, player_x: float) -> void:
 			if shot.age >= float(Rules.config.rocket_ignite) and not shot.ignited:
 				shot.ignited = true
 				shot.visual.get_node("Flame").visible = true
+				shot.visual.get_node("EngineGlow").visible = true
 				rocket_ignited.emit(shot.visual.position)
 		shot.pos += shot.velocity * delta
 		var visual: Node3D = shot.visual
-		visual.position = Vector3(shot.pos.x, 1.0, shot.pos.y)
+		visual.position = Vector3(shot.pos.x, 1.0 + (sin(clampf(shot.age/1.3,0,1)*PI)*2.8 if shot.kind == "rocket" else 0.0), shot.pos.y)
 		if shot.kind == "rocket":
 			visual.rotation.y = atan2(-shot.velocity.x, -shot.velocity.y)
+			visual.rotation.x = atan2(cos(clampf(shot.age/1.3,0,1)*PI)*6.7 if shot.age<1.3 else 0.0, shot.velocity.length())
 		else:
 			visual.rotation.z += delta * 8
 		var removed := false
@@ -53,7 +55,7 @@ func tick(delta: float, player_x: float) -> void:
 						remove(shot)
 						removed = true
 						break
-		elif Rules.segment_hits(previous, shot.pos, Vector2(player_x, 0), 0.5):
+		elif (shot.kind != "rocket" or shot.age > 1.15) and Rules.segment_hits(previous, shot.pos, Vector2(player_x, 0), 0.5):
 			player_hit.emit(shot.damage)
 			impact.emit(visual.position, Color("f87959"))
 			remove(shot)
@@ -61,19 +63,19 @@ func tick(delta: float, player_x: float) -> void:
 		if not removed and (shot.age > float(Rules.config.rocket_lifetime) or absf(shot.pos.x) > 16 or shot.pos.y < -float(Rules.config.enemy_spawn_distance)-20.0 or shot.pos.y > 12):
 			remove(shot)
 
-func remove(shot: Dictionary) -> void:
-	if shot.kind == "rocket" and shot.ignited:
+func remove(shot: Dictionary, feedback: bool = true) -> void:
+	if feedback and shot.kind == "rocket" and shot.ignited:
 		rocket_exploded.emit(shot.visual.position)
 	shots.erase(shot)
 	shot.visual.queue_free()
 
 func clear() -> void:
-	for shot in shots.duplicate(): remove(shot)
+	for shot in shots.duplicate(): remove(shot,false)
 
 func rocket_trails(effects: Effects, delta: float) -> void:
 	for shot in shots:
 		if shot.kind == "rocket" and shot.ignited:
 			shot.trail_clock = shot.get("trail_clock", 0.0) + delta
-			if shot.trail_clock >= 0.08:
+			if shot.trail_clock >= 0.035:
 				shot.trail_clock = 0.0
-				effects.burst(shot.visual.position, Art.GOLD, 1)
+				effects.burst(shot.visual.position, Color("85d5ff"), 2)

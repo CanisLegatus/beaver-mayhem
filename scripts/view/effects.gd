@@ -6,10 +6,10 @@ var textures: Dictionary = {}
 var sprite_materials: Dictionary = {}
 func _init() -> void: rng.randomize()
 
-func burst(pos: Vector3, color: Color, count: int = 7) -> void:
+func burst(pos: Vector3, color: Color, count: int = 7, kind: String = "mixed") -> void:
 	for i in range(count):
 		if particles.size() >= int(Rules.config.vfx_cap): break
-		var smoke := i % 4 == 0
+		var smoke := i % 4 == 0 or kind == "smoke"
 		var visual := Sprite3D.new()
 		add_child(visual)
 		var file := "smoke_01" if smoke else ("spark_01" if i % 2 == 0 else "star_01")

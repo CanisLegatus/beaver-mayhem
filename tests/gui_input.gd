@@ -60,6 +60,26 @@ func run() -> void:
 	await process_frame
 	click(game.hud.restart_button.get_global_rect().get_center())
 	check(game.state == "playing" and game.economy.damage_level == 0, "restart button resets run")
+	game.progression.unlocked = 2
+	game.show_map()
+	for i in range(3): await process_frame
+	click(game.level_map.root.get_node("CreditsButton").get_global_rect().get_center())
+	check(game.level_map.credits_panel.visible,"offline asset/music credits open")
+	var close: Button = game.level_map.credits_panel.find_child("CloseCredits",true,false)
+	click(close.get_global_rect().get_center())
+	check(not game.level_map.credits_panel.visible,"credits close")
+	click(game.level_map.card_buttons[1].get_global_rect().get_center())
+	check(game.current_level == 2 and game.action_camera.mode == "moon","chapter 2 selection starts moonfall")
+	await process_frame
+	click(game.hud.skip_button.get_global_rect().get_center())
+	check(game.state == "playing","moonfall skip restores run")
+	game.begin_qte(2,"house")
+	await process_frame
+	var right_button: Button = game.hud.qte_panel.get_child(2).get_child(2)
+	click(right_button.get_global_rect().get_center())
+	check(game.state == "dodge_movie","QTE touch button triggers dodge")
+	game.action_camera.tick(2)
+	check(game.state == "playing","cinematic dodge returns to playing")
 	game.queue_free()
 	await process_frame
 	Art.materials.clear()

@@ -1,5 +1,11 @@
 # BEAVER MAYHEM — REVENGE OF THE FOREST
 
+Current design: v0.3.0. The original runner rules below remain unless superseded by
+[LEVELS.md](LEVELS.md), which specifies chapter weather, events, hordes and bosses.
+The ten chapter slots share saved sequential progression; chapters 1 and 2 now have
+distinct enemies, opening scenes and finales. Chapters 3–10 share forest combat
+with different weather presets.
+
 Offline portrait 3D arcade runner/shooter for Android. A cartoon beaver defends the
 forest against lumberjacks, engineers and a rocket-launching parody of Elon Musk.
 The run lasts 150 seconds before the approaching DEFORESTATOR bulldozer finale.
@@ -7,8 +13,8 @@ The run lasts 150 seconds before the approaching DEFORESTATOR bulldozer finale.
 ## Game flow
 Campaign map → optional first-chapter cinematic → Playing → Victory or Game Over.
 Play Again retries the current chapter; Level Map returns to chapter selection.
-Victory unlocks only the next chapter and offers Next Chapter. All ten chapters
-currently have identical rules, length and content. A fresh save unlocks chapter one.
+Victory unlocks only the next chapter and offers Next Chapter. Chapter one is human forest combat; chapter two is Moonfall/hordes.
+The remaining chapters currently reuse forest combat with weather variations. A fresh save unlocks chapter one.
 Progress is atomically saved in user://progress.cfg; cash/upgrades reset per attempt. Pause/resume is available
 from the HUD, Escape, Android Back, or application backgrounding. Gameplay is frozen
 on pause and result screens; purchases never pause. Restart clears health, cash,
@@ -32,19 +38,19 @@ Screen flash, recoil, particles and sounds give hit feedback.
 ## Enemies and progression
 | Type | HP | Attack / interval | Reward | Breach |
 |---|---:|---|---:|---:|
-| Lumberjack | 24 | straight axe, 4 HP / 3.5 s | $10 | −$5 |
-| Engineer | 55 | fast aimed-at-launch paper, 10 HP / 1.8 s | $25 | −$10 |
-| Elon parody | 120 | staged rocket, 24 HP / 3.2 s | $55 | −$18 |
+| Lumberjack | 24 | straight axe, 2 HP / 3.5 s | $10 | −$5 |
+| Engineer | 55 | fast aimed-at-launch paper, 4 HP / 1.8 s | $25 | −$10 |
+| Elon parody | 120 | staged rocket, 12 HP / 3.2 s | $55 | −$18 |
 
-The director spawns continuously with 2.4 → 1.35 s intervals. Engineers enter from
-22 s, elites from 35 s. Active threat costs 1/3/7 and is limited by 4 + 12 × progress.
+The director spawns continuously with 1.35 → 0.65 s intervals. Engineers enter from
+22 s, elites from 35 s. Active threat costs 1/3/7 and is limited by 8 + 17 × progress.
 Attacks have a 0.65 s preparation animation. Near gates spawn intervals grow by
 25% and enemy attack clocks slow to 65%, without stopping the encounter.
 Living enemies crossing behind the runner deduct money once, without HP damage.
 
-Rockets first travel sideways at 5 m/s. At 0.45 s the engine lights with flash,
-flame, trailing sparks and sound. Guidance is limited to 2 rad/s until age 1.65 s;
-after that trajectory locks. Guided acceleration is capped at 18 m/s. Lifetime
+Rockets first travel sideways at 5 m/s. At 0.22 s the engine lights with flash,
+flame, trailing sparks and sound. Guidance is limited to 2.8 rad/s until age 1.65 s;
+after that trajectory locks. Guided acceleration is capped at 34 m/s. Lifetime
 is twelve seconds; rockets can miss, exit the road and expire. Axes and paper do not guide.
 
 ## Cash, debt and choices
@@ -87,19 +93,20 @@ add a final term (+$80/−$55). Choices are shuffled independently and contain
 exactly one correct result. No zero division or rounding questions.
 
 ## Finale
-At 150 seconds ordinary spawning stops. Survivors still attack and may breach.
-A 600 HP procedural bulldozer appears 38 m ahead, approaches at 1.35 m/s, and
-collides at 4.2 m (~25 s deadline). All weapons can hit it. Zero boss HP triggers
-stopping, fragmentation/smoke particles, explosion sound and Victory. The dozer
-reaching the beaver ends the run regardless of player HP.
+At 150 seconds ordinary spawning stops. Remaining enemies remain dangerous.
+The chapter-one dozer has 1500 HP and a smaller silhouette; it holds position,
+fires missile fans, telegraphs targeted rams and throws dirt into marked lanes.
+The chapter-two Titan has 2100 HP, tree/house throws, lane slams and directional
+QTE cinematic dodges. There is no passive boss collision countdown. Physical
+projectile damage is required to win. See LEVELS.md for exact attack and QTE rules.
 
 ## Presentation
 Atmospheric forest, seven reusable road chunks, trees, stumps, rocks, grass
 and distant hills. Beaver has face, eyes, teeth, ears, paws and flat patterned tail.
 Enemies have distinct outfits, tools and headgear; the engineer wears a white
 helmet. Characters bob, swing feet and prepare attacks. The dozer has tracks,
-wheels, cabin, windows, lights, blade and smoking exhaust. Original cues are mixed with downloaded CC0 recordings and a looping cinematic
-music track; eight bounded SFX voices plus one music voice can be muted. No ads, account, network,
+wheels, cabin, windows, lights, blade and smoking exhaust. Original cues are mixed with downloaded CC0 recordings and a chapter/boss action
+soundtrack; eight bounded SFX voices plus one music voice can be muted. No ads, account, network,
 analytics or paid assets. Chapter unlocks persist locally.
 
 ## v0.2 presentation and opening story

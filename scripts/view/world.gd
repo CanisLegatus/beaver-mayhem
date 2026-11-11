@@ -7,10 +7,45 @@ var sky_material: ProceduralSkyMaterial
 var sun: DirectionalLight3D
 var moon: DirectionalLight3D
 var night_amount := 0.0
+var profile: Dictionary = LevelProfile.for_level(1)
+var weather: WeatherFX
+var road_material: ShaderMaterial
+var reverse_road_material: ShaderMaterial
+var ground_material: ShaderMaterial
+var foliage_materials: Array[Dictionary] = []
+var elapsed := 0.0
 const CHUNK_SIZE := 40.0
 
 func _ready() -> void:
 	rng.seed = 705
+	road_material = ShaderMaterial.new()
+	var road_shader := Shader.new()
+	road_shader.code = """shader_type spatial;
+render_mode cull_back, depth_draw_opaque;
+uniform sampler2D pavement : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D normal_tex : hint_normal, filter_linear_mipmap, repeat_enable;
+uniform sampler2D rough_tex : filter_linear_mipmap, repeat_enable;
+uniform vec2 texture_repeat = vec2(2.75,10.0);
+uniform float wetness = 0.0;
+uniform float snow = 0.0;
+void fragment(){
+ vec2 uv = UV*texture_repeat;
+ vec3 stone = texture(pavement,uv).rgb*0.62;
+ float grain = texture(rough_tex,uv).r;
+ float cover = smoothstep(0.12,0.85,snow*(0.9+grain*0.35));
+ ALBEDO = mix(stone*mix(1.0,0.66,wetness),vec3(0.76,0.82,0.86),cover);
+ ROUGHNESS = mix(mix(grain,0.22,wetness),0.85,cover);
+ NORMAL_MAP = texture(normal_tex,uv).rgb;
+ NORMAL_MAP_DEPTH = 0.3*(1.0-cover*0.65);
+}"""
+	road_material.shader = road_shader
+	road_material.set_shader_parameter("pavement",load("res://assets/textures/asphalt-color.jpg"))
+	road_material.set_shader_parameter("normal_tex",load("res://assets/textures/asphalt-normal.jpg"))
+	road_material.set_shader_parameter("rough_tex",load("res://assets/textures/asphalt-roughness.jpg"))
+	ground_material = road_material.duplicate()
+	ground_material.set_shader_parameter("pavement",load("res://assets/textures/ground-color.jpg"))
+	ground_material.set_shader_parameter("normal_tex",load("res://assets/textures/ground-normal.jpg"))
+	ground_material.set_shader_parameter("texture_repeat",Vector2(4.75,10))
 	var world_environment := WorldEnvironment.new()
 	environment = Environment.new()
 	environment.background_mode = Environment.BG_SKY
@@ -59,20 +94,32 @@ func _ready() -> void:
 		for i in range(18): Art.tree(self,Vector3(side*(6+i*1.8),0,-140-rng.randf()*20),rng.randf_range(2,4))
 	# Complete the reverse view for the 360-degree opening camera.
 	Art.box(self,Vector3(0,-0.47,100),Vector3(140,0.5,200),Color("486c43"))
-	Art.box(self,Vector3(0,-0.25,100),Vector3(11,0.4,200),Color("928063"))
+	# Slightly lower reverse-view pavement cannot z-fight with moving chunks.
+	var reverse_road := Art.box(self,Vector3(0,-0.28,110),Vector3(11,0.4,180),Color.WHITE)
+	reverse_road_material = road_material.duplicate()
+	reverse_road_material.set_shader_parameter("texture_repeat",Vector2(2.75,45))
+	reverse_road.material_override = reverse_road_material
 	for side in [-1,1]:
 		for i in range(12):
 			Art.tree(self,Vector3(side*(8+i%3*3),0,28+i*11),2.4+i%3*0.3)
 	batch_static_chunk(self)
+	weather = WeatherFX.new()
+	add_child(weather)
+	for mat in Art.materials.values():
+		var base: Color = mat.albedo_color
+		if base.g > base.r*1.08 and base.g>0.3:
+			foliage_materials.append({"material":mat,"base":base})
+	configure(1)
 	set_time(0)
 
 func build_chunk(chunk: Node3D, biome: int) -> void:
-	var earth: Color = [Color("928063"),Color("998773"),Color("8c8474"),Color("aa885a")][biome%4]
+	var earth := Color("54564f")
 	var grass: Color = [Color("486c43"),Color("60794e"),Color("41644f"),Color("7d7944")][biome%4]
 	var road := Art.box(chunk,Vector3(0,-0.25,-20),Vector3(11,0.4,40),earth)
-	road.material_override = Sculpt.surface(earth)
+	road.material_override = road_material
 	for side in [-1,1]:
-		Art.box(chunk,Vector3(side*15,-0.45,-20),Vector3(19,0.7,40),grass)
+		var floor_mesh := Art.box(chunk,Vector3(side*15,-0.45,-20),Vector3(19,0.7,40),grass)
+		floor_mesh.material_override = ground_material
 		Art.box(chunk,Vector3(side*5.25,-0.04,-20),Vector3(0.1,0.05,40),Color("bfac74"))
 		for j in range(7):
 			var p := Vector3(side*rng.randf_range(7,19),0,-j*6.0)
@@ -105,6 +152,7 @@ func broadleaf(parent: Node3D, pos: Vector3, height: float, color: Color) -> voi
 		Art.ball(parent,pos+Vector3(cos(angle)*height*0.4,height*1.35,sin(angle)*height*0.4),Vector3(height,height*0.8,height),color.lightened(i*0.015))
 
 func scroll(delta: float, seconds: float = 0.0) -> void:
+	weather.tick(delta)
 	set_time(seconds)
 	for chunk in chunks:
 		chunk.position.z += Rules.run_speed(seconds)*delta
@@ -112,8 +160,9 @@ func scroll(delta: float, seconds: float = 0.0) -> void:
 
 func set_time(seconds: float) -> void:
 	# Dawn → daylight → dusk → moonlight → dawn, with readable ambient light.
-	var phase := seconds / float(Rules.config.cycle_seconds)*TAU
-	night_amount = smoothstep(-0.2,0.7,-cos(phase))
+	elapsed = seconds
+	var phase := seconds / 220.0*TAU
+	night_amount = 0.96 if bool(profile.night) else smoothstep(-0.2,0.7,-cos(phase))
 	var dusk := pow(1.0-absf(cos(phase)),4.0)
 	sky_material.sky_top_color = Color("527f9c").lerp(Color("08132b"),night_amount)
 	sky_material.sky_horizon_color = Color("b8cbbb").lerp(Color("293753"),night_amount).lerp(Color("b07e71"),dusk*0.45)
@@ -124,7 +173,20 @@ func set_time(seconds: float) -> void:
 	sun.light_energy = lerpf(0.8,0.04,night_amount)
 	sun.light_color = Color("ffdfad").lerp(Color("f2b580"),dusk)
 	sun.rotation_degrees.x = -42+sin(phase)*22
-	moon.light_energy = night_amount*0.55
+	moon.light_energy = night_amount*0.65
+	if weather != null:
+		road_material.set_shader_parameter("wetness",weather.wetness)
+		road_material.set_shader_parameter("snow",weather.snow_amount)
+		ground_material.set_shader_parameter("wetness",weather.wetness)
+		ground_material.set_shader_parameter("snow",weather.snow_amount)
+		if reverse_road_material != null:
+			reverse_road_material.set_shader_parameter("wetness",weather.wetness)
+			reverse_road_material.set_shader_parameter("snow",weather.snow_amount)
+		ground_material.set_shader_parameter("wetness",weather.wetness)
+		ground_material.set_shader_parameter("snow",weather.snow_amount)
+		environment.fog_density = 0.004 + (0.004+sin(seconds*0.07)*0.002 if profile.weather in ["fog","storm","blizzard"] else 0.0)
+		sun.light_energy += weather.flash*1.8
+		environment.ambient_light_energy += weather.flash*0.6
 
 func batch_static_chunk(chunk: Node3D) -> void:
 	var groups: Dictionary = {}
@@ -144,3 +206,12 @@ func batch_static_chunk(chunk: Node3D) -> void:
 		batch.material_override = group[0].material_override
 		chunk.add_child(batch)
 		for child in group: child.free()
+
+func configure(level: int) -> void:
+	profile = LevelProfile.for_level(level)
+	weather.configure(profile)
+	weather.wetness = 1.0 if profile.wet else 0.0
+	weather.snow_amount = 1.0 if profile.snow else 0.0
+	for entry in foliage_materials:
+		entry.material.albedo_color = entry.base.lerp(Color("d0dfe2"),0.8 if profile.snow else 0.0)
+	set_time(0)

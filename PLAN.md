@@ -18,3 +18,11 @@ Real-device testing remains unverified and tracked in [issue #1](https://github.
 
 Current delivery: [v0.2.0](https://github.com/CanisLegatus/beaver-mayhem/releases/tag/v0.2.0).
 Uploaded APK SHA256 matches the locally verified build; real-device acceptance remains issue #1.
+
+## v0.3 — distinct worlds and action bosses
+- [x] Fix mesh winding/opacity and continuous stable road shading.
+- [x] Chapter weather sets, wet/snow materials, lightning and announced road events.
+- [x] Faster arcing rockets, denser combat, trucks and comet/shard hazards.
+- [x] Chapter-two falling moon cinematic, four zombie types and horde director.
+- [x] Attack-driven dozer and titan/tree/house attacks with fair QTE cinematics.
+- [ ] Licensed action soundtrack/voices, tests, visual review and signed APK release.

@@ -68,7 +68,7 @@
     {
       "name": "LUMBERJACK",
       "hp": 24.0,
-      "damage": 4.0,
+      "damage": 2,
       "attack": 3.5,
       "reward": 10,
       "penalty": 5,
@@ -79,7 +79,7 @@
     {
       "name": "ENGINEER",
       "hp": 55.0,
-      "damage": 10.0,
+      "damage": 4,
       "attack": 1.8,
       "reward": 25,
       "penalty": 10,
@@ -90,7 +90,7 @@
     {
       "name": "ELON",
       "hp": 120.0,
-      "damage": 24.0,
+      "damage": 12,
       "attack": 3.2,
       "reward": 55,
       "penalty": 18,
@@ -99,16 +99,14 @@
       "projectile_speed": 16.0
     }
   ],
-  "boss_hp": 600.0,
-  "boss_speed": 1.35,
   "boss_start_distance": 38.0,
-  "projectile_cap": 160,
-  "enemy_cap": 22,
+  "projectile_cap": 220,
+  "enemy_cap": 64,
   "loot_cap": 90,
   "vfx_cap": 96,
-  "rocket_ignite": 0.45,
+  "rocket_ignite": 0.22,
   "rocket_lock": 1.65,
-  "rocket_turn": 2.0,
+  "rocket_turn": 2.8,
   "rocket_lifetime": 12.0,
   "loot_radius": 1.15,
   "gate_times": [
@@ -126,5 +124,58 @@
   "gate_preview_seconds": 7.0,
   "world_chunk_count": 7,
   "cycle_seconds": 110.0,
-  "level_count": 10
+  "level_count": 10,
+  "rocket_speed": 34.0,
+  "rocket_acceleration": 54.0,
+  "event_cap": 12,
+  "zombies": [
+    {
+      "name": "SHAMBLER",
+      "hp": 18.0,
+      "speed": -2.8,
+      "reward": 3,
+      "penalty": 2,
+      "damage": 3,
+      "weight": 65
+    },
+    {
+      "name": "RUNNER",
+      "hp": 24.0,
+      "speed": 2.0,
+      "reward": 5,
+      "penalty": 3,
+      "damage": 6,
+      "weight": 16
+    },
+    {
+      "name": "CRAWLER",
+      "hp": 14.0,
+      "speed": -3.8,
+      "reward": 3,
+      "penalty": 2,
+      "damage": 2,
+      "weight": 14
+    },
+    {
+      "name": "SPITTER",
+      "hp": 40.0,
+      "speed": -2.0,
+      "reward": 10,
+      "penalty": 5,
+      "damage": 6,
+      "weight": 5
+    }
+  ],
+  "bosses": {
+    "dozer": {
+      "hp": 1500,
+      "scale": 0.67,
+      "radius": 2.05
+    },
+    "titan": {
+      "hp": 2100,
+      "scale": 3.6,
+      "radius": 2.65
+    }
+  }
 }

@@ -112,9 +112,19 @@ static func projectile(kind: String) -> Node3D:
 			var hull := cylinder(root, Vector3.ZERO, 0.14, 0.8, Color.WHITE, 0.03)
 			hull.rotation.x = PI / 2
 			box(root, Vector3(0, 0, 0.22), Vector3(0.55, 0.06, 0.2), Color("e76b55"))
-			var flame := ball(root, Vector3(0, 0, 0.6), Vector3(0.2, 0.2, 0.65), GOLD)
+			var flame := ball(root, Vector3(0, 0, 0.6), Vector3(0.35, 0.35, 1.4), GOLD)
+			flame.material_override = material(Color("7acfff"),true)
 			flame.name = "Flame"
 			flame.visible = false
+			var engine_light := OmniLight3D.new()
+			engine_light.name = "EngineGlow"
+			engine_light.light_color = Color("74cfff")
+			engine_light.light_energy = 1.3
+			engine_light.omni_range = 3.5
+			engine_light.visible = false
+			root.add_child(engine_light)
+		"spit":
+			ball(root,Vector3.ZERO,Vector3.ONE*0.3,Color("a5ce5b")).material_override = material(Color("91c35a"),true)
 		"axe":
 			box(root, Vector3.ZERO, Vector3(0.1, 0.65, 0.1), BROWN)
 			box(root, Vector3(0.18, 0.23, 0), Vector3(0.45, 0.3, 0.13), Color("d6e2df"))

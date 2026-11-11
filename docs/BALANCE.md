@@ -1,34 +1,38 @@
-# Balance — 0.2.0
+# Balance — 0.3.0
 
-Runtime source: `config/balance.json`. All ten chapters currently use this same
-ruleset; only campaign unlock/selection persists. Cash and upgrades reset each run.
+Source: config/balance.json. See LEVELS.md for attack windows/weather/QTE rules.
 
-## Tempo and economy
+## Tempo and enemy pressure
 
-Run: 150 seconds before the boss. Forward speed ramps from 10
-to 15 m/s; lateral speed is 8 m/s (one lane in 0.25 s).
-Integrated road distance to boss: 1875 m. Enemy spawn distance: 115 m, hidden
-in horizon haze rather than born near the camera. Gate approach distance is
-computed by integrating the next seven seconds of speed, growing 70.8–105 m.
+Run before boss: 150 seconds; speed 10 → 15 m/s; lateral 8 m/s. The road covers
+1875 m before the finale. Human spawn intervals 1.35 → 0.65 s, active threat 8 → 25,
+up to 32 humans. Chapter two spawns packs of 5–8, capped at 64 regular zombies.
+Zombie advance is road speed × 0.65 plus variant speed, slower than the human march.
 
-| Enemy | HP | Reward | Breach penalty | Attack interval |
+| Human | HP | Shot damage | Reward | Breach |
 |---|---:|---:|---:|---:|
-| LUMBERJACK | 24 | $10 | $5 | 3.5 s |
-| ENGINEER | 55 | $25 | $10 | 1.8 s |
-| ELON | 120 | $55 | $18 | 3.2 s |
+| LUMBERJACK | 24 | 2 | $10 | $5 |
+| ENGINEER | 55 | 4 | $25 | $10 |
+| ELON | 120 | 12 | $55 | $18 |
 
-The elite primes its first rocket at 0.12 s after spawning, including at the
-horizon. Later attacks repeat every 3.2 s; guidance remains limited and locks
-after 1.65 s. Rockets have twelve seconds of life to cover the longer approach.
+| Zombie | HP | Speed offset | Contact/spit damage | Reward / breach |
+|---|---:|---:|---:|---:|
+| SHAMBLER | 18 | -2.8 | 3 | $3 / $2 |
+| RUNNER | 24 | 2 | 6 | $5 / $3 |
+| CRAWLER | 14 | -3.8 | 2 | $3 / $2 |
+| SPITTER | 40 | -2 | 6 | $10 / $5 |
 
-Start cash $40; weapon configurations total $575.
-Damage costs [65, 100, 155, 230] ($550 total);
-rate costs [60, 95, 145, 220] ($520 total). Full arsenal and
-upgrades cost $1645. Eight gate groups spawn at 14/31/49/67/85/103/121/139 s.
-Answering all correctly awards $540. Breaches are deliberately more forgiving
-than v0.1; physical pickup and meaningful debt/seizure rules remain unchanged.
+More actors and faster missiles are compensated by lower ordinary per-hit damage.
+Elites prime at 0.12 s, repeat 3.2 s; engine ignition at 0.22 s, guidance ends at
+1.65 s, turn capped 2.8 rad/s, acceleration 54 m/s² to 34 m/s. Firing direction
+locks afterward. Telegraphs, finite turns and reserved horde gaps allow avoidance.
 
-## Weapons
+## Progression and weapons
+
+Start $40; configurations total $575; damage levels cost $550 total, rate $520.
+Whole shop totals $1645. Eight correct gates award $540; missed coins do not credit.
+Increased spawn density raises potential income and breach exposure. Negative cash
+remains playable and can confiscate assets every ten seconds.
 
 | Weapon | Damage × count | Interval | Base sustained DPS | Max sustained DPS |
 |---|---:|---:|---:|---:|
@@ -38,42 +42,46 @@ than v0.1; physical pickup and meaningful debt/seizure rules remain unchanged.
 | twin | 7.5 × 2 | 0.42 s | 35.71 | 102.86 |
 | laser | 6 × 1 | 0.1 s | 31.43 | 90.51 |
 
-Damage factor `1 + .20 × level`, rate factor `1 + .15 × level`, cap four
-levels each: maximum power is 2.88×. Values assume perfect physical hits.
-For illustrative 60% accuracy, effective DPS is 0.6 times the table. Fan
-sums three directions; a small single target generally catches only one.
-Heavy penetrates three unique targets. Twin offsets are ±0.5 m. Laser burst
-is 60 DPS, followed by forced cooling; switching preserves heat.
+Four capped levels each multiply damage by up to 1.8 and rate by 1.6: 2.88× maximum.
+Fan sums three rays, so distant single targets often take one. Heavy pierces three
+unique targets. Twin offsets ±0.5 m. Laser burst DPS 60, with heat/cooling duty.
+At illustrative 60% accuracy multiply sustained DPS by 0.6. HP 24/55/120 require
+2/5/10 base log hits; 18-HP shamblers require two, maximum damage logs one.
 
-Base log hits to kill 24/55/120 HP: 2/5/10 hits (0.4/1.6/3.6 s after first
-impact, plus travel). Boss HP 600, collision deadline ~25 s. Theoretical
-perfect base log boss damage time ~20 s, maximum logs ~6.94 s; misses,
-survivors and projectile travel extend actual fights.
+## Bosses
 
-## Full-scene simulations
+Dozer: 1500 HP, scale 0.67, no passive advance. Missile fans, warned ram (30 HP once)
+and lane dirt throws (18 HP). Titan: 2100 HP, throws/slams and QTE failure (28 HP once).
+Physical DPS is still required to win. Ideal base-log firing time is 50/70 seconds;
+maximum ideal logs 17.4/24.3 seconds. Attacks, movement and travel extend this.
+QTE/cinematic time freezes all combat and does not deal free boss damage.
 
-Nine strategies × three seeds (11/42/91). Actual game/projectiles/economy,
-no granted money or HP, automated steering only. This is not a human win rate.
-Bad-math chooses incorrect answers; losses wanders and misses pickups.
+## Full-scene probes
 
-| Strategy | Wins / 3 | Winning boss phase range | Final cash range |
-|---|---:|---:|---:|
-| base | 2 | 19.8–20.2 s | $1097 to $1354 |
-| damage | 2 | 8.9–9.3 s | $808 to $845 |
-| rate | 1 | 8.3–8.3 s | $733 to $893 |
-| fan | 3 | 11.0–11.3 s | $597 to $698 |
-| heavy | 3 | 6.5–6.6 s | $661 to $714 |
-| twin | 3 | 7.1–7.7 s | $651 to $726 |
-| laser | 3 | 8.4–8.4 s | $448 to $670 |
-| bad_math | 3 | 9.5–11.3 s | $-3 to $124 |
-| losses | 3 | 10.3–10.5 s | $47 to $60 |
+33 attempts: nine strategies × three seeds in chapter one, fan/heavy × three in
+chapter two. All gameplay RNG sources are seeded. The bot uses a simple projectile
+predictor, lane warnings, contact avoidance and QTE response. It receives no free
+HP/cash. These are development probes, not human win rates or proof of final tuning.
 
-Collected kill cash: $134–$1033;
-potential dropped cash: $670–$1300;
-breach costs: $0–$206.
-Extra time and higher rewards make this version intentionally more generous.
-These bot strategies optimize one configuration; they do not prove a player
-can or cannot buy the whole shop. Phone play remains necessary for final tuning.
+| Chapter | Strategy | Wins / attempts | Winning boss combat range | Final cash range |
+|---|---|---:|---:|---:|
+| 1 | base | 0 / 3 | — | $292 to $474 |
+| 1 | damage | 0 / 3 | — | $110 to $319 |
+| 1 | rate | 0 / 3 | — | $62 to $242 |
+| 1 | fan | 0 / 3 | — | $-73 to $31 |
+| 1 | heavy | 1 / 3 | 20.1–20.1 s | $158 to $578 |
+| 1 | twin | 0 / 3 | — | $-23 to $157 |
+| 1 | laser | 0 / 3 | — | $14 to $116 |
+| 1 | bad_math | 0 / 3 | — | $-351 to $-299 |
+| 1 | losses | 0 / 3 | — | $-14 to $62 |
+| 2 | fan | 1 / 3 | 96.8–96.8 s | $-147 to $70 |
+| 2 | heavy | 2 / 3 | 28.8–34.5 s | $25 to $67 |
 
-[Raw data](simulation-results.json). Regenerate: `./tools/check.sh` then
-`python3 tools/report_balance.py`.
+QTE movies do not advance the reported combat clock. Separate boss-fight fixtures
+pre-fund a heavy build explicitly to validate whole attack loops and physical victory;
+they are not counted as earned-loadout runs. Both bosses were defeated in those fixtures.
+Chapter two remains demanding. Phone/human playtesting is needed before claiming
+production difficulty or accessibility across skill levels.
+
+[Raw outcomes](simulation-results.json). Regenerate with tools/check.sh and
+python3 tools/report_balance.py.

@@ -9,15 +9,15 @@ static func surface(color: Color, kind: String = "cloth") -> ShaderMaterial:
 	if not surfaces.has(key):
 		var shader := Shader.new()
 		shader.code = """shader_type spatial;
-render_mode specular_schlick_ggx;
+render_mode specular_schlick_ggx, cull_back, depth_draw_opaque;
 uniform vec4 tint : source_color;
 uniform float grain = 1.0;
 varying vec3 local_pos;
-void vertex(){ local_pos = (MODEL_MATRIX*vec4(VERTEX,1.0)).xyz; }
+void vertex(){ local_pos = VERTEX; }
 float hash(vec3 p){ return fract(sin(dot(p,vec3(12.9898,78.233,35.425)))*43758.5453); }
 void fragment(){
  float n = 0.5 + sin(local_pos.x*141.0+local_pos.z*127.0)*sin(local_pos.y*93.0)*0.15;
- float weave = sin(local_pos.y*420.0 + sin(local_pos.x*120.0)*2.0);
+ float weave = sin(local_pos.y*120.0 + sin(local_pos.x*70.0)*2.0);
  ALBEDO = tint.rgb * (0.9 + n*0.12 + weave*0.018*grain);
  ROUGHNESS = 0.77 + n*0.2;
  NORMAL_MAP = vec3(0.5+weave*0.012*grain,0.5+(n-0.5)*0.035,1.0);
@@ -39,7 +39,7 @@ static func rings(parent: Node3D, key: String, profiles: Array, color: Color, po
 		var segments := 24
 		for row in range(profiles.size()-1):
 			for section in range(segments):
-				for corner in [[row,section],[row+1,section],[row+1,section+1],[row,section],[row+1,section+1],[row,section+1]]:
+				for corner in [[row,section],[row+1,section+1],[row+1,section],[row,section],[row,section+1],[row+1,section+1]]:
 					var p: Array = profiles[corner[0]]
 					var angle: float = float(corner[1]) / segments * TAU
 					tool.set_uv(Vector2(float(corner[1])/segments,float(corner[0])/(profiles.size()-1)))

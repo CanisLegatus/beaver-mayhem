@@ -36,3 +36,19 @@
   launcher icon; in-game models remain mobile-oriented semi-realistic 3D assets.
 - Disable 3D while the roadmap is open. Merge static character parts by material
   while preserving named foot animation pivots; batch distant trees as well.
+
+## v0.3 corrections and level identity
+- The apparent transparent backs were inward-wound custom rings, not alpha. Reverse
+  triangle order and test outward normals; keep opaque depth-writing materials.
+- Remove per-chunk road color changes and world-space high-frequency grain. Use
+  stable repeated PBR UVs, actual light transitions and wet/snow scalar uniforms.
+  Lower the static reverse-view road to eliminate coplanar overlap with scrolling road.
+- Weather belongs to the selected chapter. Only chapters 1 and 2 get bespoke encounter
+  identities in this release; remaining chapter slots are honest weather variants.
+- Faster missiles and denser combat are balanced with lower per-hit ordinary damage.
+  Threat and entity caps remain. QTE/movie sequences freeze combat to prevent offscreen
+  unavoidable hits; failure has one explicit damage event and no repeated charges.
+- Replace the boss collision race with attack state machines. The dozer's ram snapshots
+  a position and returns; the Titan's attacks include physical lane hazards and QTEs.
+- Use legally redistributable recognized action music plus recorded voices/ambience,
+  with attribution both in source and an offline in-game credits view.

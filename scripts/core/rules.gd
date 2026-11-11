@@ -15,10 +15,10 @@ static func upgrade_cost(kind: String, level: int) -> int:
 	return int(config[kind + "_costs"][level])
 
 static func threat_budget(seconds: float) -> float:
-	return 4.0 + minf(seconds / float(config.run_seconds), 1.0) * 12.0
+	return 8.0 + minf(seconds / float(config.run_seconds), 1.0) * 17.0
 
 static func spawn_interval(seconds: float) -> float:
-	return lerpf(2.4, 1.35, clampf(seconds / float(config.run_seconds), 0.0, 1.0))
+	return lerpf(1.35, 0.65, clampf(seconds / float(config.run_seconds), 0.0, 1.0))
 
 static func move_x(current: float, target: float, delta: float) -> float:
 	return move_toward(current, clampf(target, -config.road_limit, config.road_limit), config.strafe_speed * delta)
@@ -34,7 +34,7 @@ static func rocket_velocity(velocity: Vector2, target_offset: Vector2, age: floa
 	var angle := velocity.angle()
 	var difference := wrapf(target_offset.angle() - angle, -PI, PI)
 	angle += clampf(difference, -float(config.rocket_turn) * delta, float(config.rocket_turn) * delta)
-	return Vector2.from_angle(angle) * minf(18.0, velocity.length() + delta * 22.0)
+	return Vector2.from_angle(angle) * minf(float(config.rocket_speed), velocity.length() + delta * float(config.rocket_acceleration))
 
 static func math_problem(seconds: float, rng: RandomNumberGenerator) -> Dictionary:
 	var a := rng.randi_range(3, 15)
