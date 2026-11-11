@@ -1,0 +1,7 @@
+.godot/
+builds/*
+!builds/.gitkeep
+*.keystore
+*.jks
+.env*
+*.log
